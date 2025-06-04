@@ -1,0 +1,127 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+
+description: project-core continuous rules (v1.1)
+alwaysApply: true
+globs:
+
+* docs/\*.md
+* tasks/\*\*/\*.md
+
+---
+
+\########################################################
+
+# 1  TASK ENGINE (runtime)
+
+\########################################################
+
+* New requirement appended via /ADD\_REQUIREMENT → run DECOMPOSE().
+* Run DEPGRAPH() each time backlog updated.
+* phase file ≥ 300 lines when reached → ROTATE() to new phase and archive old.
+
+### DEPGRAPH()
+
+* Build DAG from `Depends`; if cycle detected → apply Kahn split smallest node.citeturn0search3
+
+### ROTATE()
+
+* Rotate when any phase-X.md ≥ 300 lines:
+
+  1. Archive `tasks/backlog/phase-X.md` → `tasks/archive/phase-X-YYYYMM.md`.
+  2. Create new `tasks/backlog/phase-(X+1).md` with header row.
+  3. Append new phase to `tasks_master.phases` and increment `tasks_master.rotations`.
+
+\########################################################
+
+# 2  CODE & CI
+
+\########################################################
+
+* Black + Ruff must pass; pytest coverage ≥ 80 %.
+* On CI fail → append summary to `docs/Progress.md` & spawn fix task.
+* Every 20 tasks completed → spawn meta-task “full-test-suite”:
+
+  * Run `pytest --cov=. --maxfail=1` on entire codebase.
+  * If coverage < threshold → spawn `COVERAGE_IMPROVE_<rotations>` task.
+
+\########################################################
+
+# 2.1  AUTONOMOUS REMEDIATION LOOP  (30-Day Community Meta)
+
+\########################################################
+
+* After pushing code for a sub-task:
+
+  1. Run **pytest -q -k** on changed modules.
+  2. If tests fail → call **DIAGNOSE\_FIX\_RETEST()**.
+
+### DIAGNOSE\_FIX\_RETEST()
+
+* Attempt ≤ **3** autonomous cycles:
+  A. Analyse stack trace → locate faulty lines.
+  B. If no failing test exists, create a new failing unit test in `tests/regression/` with `xfail=True`.citeturn0search2
+  C. Patch code; re-run scoped tests.
+* On success → mark tests green, remove `xfail` tags.
+* If still failing after 3 cycles →
+
+  1. Create blocking task `DEBUG_ESCALATE_<ID>` with:
+
+     * Path to failing test.
+     * List of attempted fixes.
+     * Latest error output.
+  2. Append summary to `docs/Progress.md`.
+
+\########################################################
+
+# 2.2  COVERAGE BUDGET  (Auto-Evolve)
+
+\########################################################
+
+* On each “full-test-suite” run:
+
+  * Calculate coverage via `pytest --cov=.`
+  * If coverage > (`tasks_master.rotations` × 2 + 80) % then:
+
+    1. Update the coverage threshold comment in this file.
+    2. Append a coverage improvement note to `docs/Progress.md`.
+
+\########################################################
+
+# 3  EXTERNAL UPGRADE GUARD
+
+\########################################################
+Before first import or invocation of any package/CLI `<PKG>` within a file:
+
+1. `search("<PKG> changelog latest major breaking")`.
+2. If remote semver > local semver → create auto-task `Upgrade <PKG>`.
+
+\########################################################
+
+# 4  RULE ROTATION
+
+\########################################################
+When this file exceeds 5500 characters (Cursor truncates at \~6000 chars):
+
+1. Move oldest section(s) to `docs/ARCHIVE_RULES/YYYY-MM.md`.
+2. Insert stub `<!-- ARCHIVE_RULES/YYYY-MM.md -->` at that location.
+
+\########################################################
+
+# 5  ZERO TODO POLICY
+
+\########################################################
+No `<TODO>` left when parent task is marked ✔; otherwise:
+
+* Spawn a `FIXME-Doc-<filename>` task in the backlog.
+
+\########################################################
+
+# 6  HUMAN FAIL-SAFE
+
+\########################################################
+If any operation confidence < 0.3 **OR** the same error occurs > 5 times → create task `Need human review`.

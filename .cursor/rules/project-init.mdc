@@ -1,0 +1,100 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+
+description: project-init & migrate rules (v1.1)
+alwaysApply: true
+globs:
+
+* docs/\*.md
+* tasks/\*\*/\*.md
+
+---
+
+\########################################################
+
+# A  MEMORY & BOOTSTRAP
+
+\########################################################
+
+* The agent resets each session – ALWAYS read docs/ & tasks/.
+* If `tasks/tasks_master.yaml` is missing → call INIT\_PROJECT.
+* If `existing_repo: true` flag is in this file → call MIGRATE\_EXISTING.
+
+### INIT\_PROJECT
+
+1. Parse `docs/PRD.md`; it **MUST contain 11 H1 headings (0-10)**.
+2. Create **exactly**
+
+   * `docs/DESIGN.md` – Mermaid context diagram + “Modules” table
+   * `docs/AgentFacts.md` – Runtime Stack • External Docs • Embedding Scheme
+   * `docs/Progress.md` – empty header
+   * `tasks/tasks_master.yaml` – schema §C
+   * `tasks/backlog/phase-0.md` – atomic tasks via DECOMPOSE() (§B)
+3. Commit `init project`.
+
+### MIGRATE\_EXISTING
+
+1. Scan repo (`pyan3`) → build import graph → write diagram to DESIGN.md.citeturn0search8
+2. Diff PRD §4 vs code；mark implemented features as ✔ & update `done`.
+3. For each implemented F##:
+
+   * Call `DECOMPOSE()` to generate subtasks and mark ✔.
+4. For remaining F## → run DECOMPOSE() normally.
+5. Commit `migrate baseline`.
+
+\########################################################
+
+# B  TASK DECOMPOSITION  (Claude-Task-Master pattern)
+
+\########################################################
+*For each PRD §4 row*
+
+1. If `ComplexityGuess` empty → estimate 1-5.
+2. Complexity → subtasks mapping: 1→1, 2→3, 3→5, 4→8, 5→13.citeturn0search2
+3. Emit subtasks → write to `tasks/backlog/phase-0.md` (6 fixed columns).
+4. Output `tasks/task-complexity-report.json`.
+
+\########################################################
+
+# C  CORE SCHEMAS（供 INIT / MIGRATE 写入）
+
+\########################################################
+
+* `docs/DESIGN.md`
+  1️⃣ Mermaid `graph` (≤ 50 nodes)
+  2️⃣ “Modules” table：ID | Name | Owner | Dir
+
+* `docs/AgentFacts.md`
+  Runtime Stack (bullets) • External Docs (Service|KeywordHint) • Embedding Scheme
+
+* `docs/Progress.md`
+  `## YYYY-MM-DD` header + ≤10 bullet/day (emoji + ≤80 chars)
+
+* `tasks/tasks_master.yaml`
+
+  ```yaml
+  total: 0
+  done: 0
+  blocked: []
+  next_ready: []
+  phases: [phase-0]
+  rotations: 0
+  retired: []
+  ```
+
+* `tasks/backlog/phase-X.md`
+  `ID | ✔ | Title | Depends | Files | Notes` (≤300 lines)
+
+\########################################################
+
+# D  SELF-CHECK
+
+\########################################################
+*After INIT/MIGRATE, verify every file matches schema C.*
+Schema violation → **ABORT & ASK** (don’t continue).
+
+# existing\_repo: false   <!-- set to true to trigger MIGRATE -->

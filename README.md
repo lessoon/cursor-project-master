@@ -1,121 +1,117 @@
-# Cursor Project Master 🚀
+# Cursor Project Master
 
-**Automate Your Development Workflow with AI**
+**Sit back and watch AI build your project.**
 
-This boilerplate leverages **Cursor** and **Claude** AI to streamline your development. Define requirements in a PRD, and AI agents automate most tasks, aiming for up to 99% automation. This frees you to focus on high-level strategy.
-
----
-
-## ✨ Features
-
-*   **AI Automation:** Up to 99% task automation.
-*   **Zero-Config:** Quick setup with a pre-configured structure.
-*   **PRD-Driven:** Single source of truth for requirements.
-*   **Automated Docs & Tasks:** AI generates design docs, knowledge bases, progress logs, and manages tasks.
-*   **Smart Decomposition:** Complex requirements broken into atomic subtasks.
-*   **Up-to-date Context:** Agents re-read relevant files each session.
-*   **Proactive Upgrades:** Automatic detection and task creation for external package updates.
-*   **Clear Signals:** `Progress.md` guides human intervention.
+A streamlined boilerplate empowering indie hackers, vibe coders, and Cursor enthusiasts to effortlessly automate 99% of coding tasks. No heavy lifting—just your vision and Cursor doing the rest.
 
 ---
 
-## 1. Quick Start
+## Why CPM
 
-To get started:
+* **99% Agent-Driven**: Minimal human intervention; AI autonomously handles tasks.
+* **Zero Coding Required**: Focus purely on creativity; AI translates your PRD into actionable tasks.
+* **Self-Maintaining Docs**: Automatically updated design diagrams, knowledge bases, and task logs.
+* **Context-Aware Agents**: Fresh context reloads ensure accuracy every session.
+* **Auto-Upgrades**: Proactive management of external dependencies and breaking changes.
+* **Future-Ready**: Optimized for next-gen agent coding like Claude 4 Opus, overcoming inherent context limits and memory challenges of current AI models.
 
-1.  **Clone:**
-    ```bash
-    git clone https://github.com/heyzgj/cursor-project-master my-new-project
-    cd my-new-project
-    ```
-2.  **Initialize:**
-    Review `docs/PRD.md` (replace `{{...}}`) and optionally tweak `.cursor/rules/project.mdc`.
-    ```bash
-    git add .
-    git commit -m "feat: initial PRD & rules"
-    ```
-3.  **Launch in Cursor:**
-    Open `my-new-project` in Cursor and type `/INIT` in chat.
-    
-    Cursor will:
-    *   Parse `docs/PRD.md` (11-heading template).
-    *   Auto-generate `docs/DESIGN.md`, `docs/AgentFacts.md`, `docs/Progress.md`.
-    *   Set up `tasks/` (including `tasks/tasks_master.yaml`, `tasks/backlog/phase-0.md`).
-    *   Prepare automated testing.
-    *   Begin task decomposition and execution.
+Unlock the true power of Cursor and Claude to scale your projects effortlessly.
 
 ---
 
-## 2. Daily Workflow
+## Quick Start
 
-Key commands:
+### New Project
 
-| Command                   | Use Case             | Effect                                        |
-| :------------------------ | :------------------- | :-------------------------------------------- |
-| `/STATUS`                 | Overview             | Shows totals, blocked tasks, code coverage.   |
-| `/ADD_REQUIREMENT`        | New feature          | Appends to PRD §4, auto-decomposes tasks.     |
-| `/OVERVIEW`               | Milestones, visibility | Generates Mermaid DAG + progress heatmap.     |
-| *No command needed*       | CI fails             | Agent spawns fix task, appends summary to `Progress.md`. |
+1. **Clone the Repository:**
 
----
+   ```bash
+   git clone https://github.com/heyzgj/cursor-project-master my-project
+   cd my-project
+   ```
 
-## 3. Core Files
+2. **Customize Your PRD:**
 
-Project file structure:
+   Replace placeholders in `docs/PRD.md`. Optionally adjust `.cursor/rules/project-init.mdc` and `.cursor/rules/project-core.mdc`.
 
-| Path                      | Purpose                                                                               |
-| :------------------------ | :------------------------------------------------------------------------------------ |
-| `docs/PRD.md`             | **Product Requirements Document:** Single source of truth (11-heading template).      |
-| `docs/DESIGN.md`          | **Design Document (Auto-generated):** Mermaid context diagram and module table.       |
-| `docs/AgentFacts.md`      | **Agent Knowledge Base (Auto-generated):** Runtime stack, external docs, embedding.   |
-| `docs/Progress.md`        | **Daily Progress Log (Auto-generated):** Concise daily log (≤ 10 bullets, ≤ 80 chars).|
-| `tasks/tasks_master.yaml` | **Task Management Master (Auto-generated):** Manages counters, tasks, phases.         |
-| `tasks/backlog/phase-N.md`| **Task Backlog (Auto-generated):** Atomic tasks (≤ 300 rows/phase) in 6-column format.|
-| `.cursor/rules/project.mdc`| **Workflow & Guardrails:** Defines AI agent rules.                                   |
+3. **Start Building:**
 
----
+   Open the project in Cursor and type:
 
-## 4. How It Works
+   ```
+   /INIT
+   ```
 
-Underlying principles:
+Cursor handles the rest:
 
-*   **Complexity to Subtasks:** Maps requirements to atomic subtasks (~30-min completion, Claude-Task-Master).
-*   **Memory Bank:** Agents re-read `docs/` and `tasks/` each session.
-*   **External Upgrade Guard:** Automates task creation for breaking changes (like Dependabot).
+* Parses your PRD
+* Generates tasks, documentation, and testing frameworks
 
----
+### Existing Project Migration
 
-## 5. When to Step In
+1. **Update Your PRD:** Align your current PRD with the provided 11-heading template in `docs/PRD.md`.
 
-Signals for human intervention from `Progress.md`:
+2. **Activate Migration:**
 
-| Signal                    | Action                                                          |
-| :------------------------ | :-------------------------------------------------------------- |
-| `Need human review`       | Agent confidence < 0.3 or same error ×3. Clarify, guide.        |
-| Repeated failed tests     | Inspect edge cases, refine acceptance criteria.                 |
-| Rule file near 5,500 chars| Run `git mv` to archive oldest section; agent handles stub.     |
+   Edit `.cursor/rules/project-init.mdc`:
 
----
+   ```yaml
+   existing_repo: true
+   ```
 
-## 6. License
+3. **Migrate:**
 
-This project is open-sourced under the [MIT License](LICENSE).
+   Open the project in Cursor and type:
 
----
+   ```
+   /MIGRATE
+   ```
 
-## 🤝 Contributing
+Cursor will:
 
-Contributions are welcome:
-
-1.  Fork the repository.
-2.  Create a new branch (`git checkout -b feature/your-feature-name`).
-3.  Make changes and ensure tests pass.
-4.  Commit changes (`git commit -m 'feat: Add new feature'`).
-5.  Push to branch (`git push origin feature/your-feature-name`).
-6.  Open a Pull Request.
+* Analyze and map existing code
+* Synchronize PRD with task backlog
+* Automatically mark completed tasks
 
 ---
 
-## Support
+## Everyday Usage
 
-For issues or questions, open an issue on the [GitHub repository](https://github.com/heyzgj/cursor-project-master/issues). I'll do my best to assist you.
+| Command            | Scenario             | Outcome                                       |
+| ------------------ | -------------------- | --------------------------------------------- |
+| `/STATUS`          | Daily review         | Summarizes tasks, blockers, coverage.         |
+| `/ADD_REQUIREMENT` | Introducing features | Auto-generates detailed subtasks.             |
+| `/OVERVIEW`        | Tracking milestones  | Displays visual progress diagrams (Mermaid).  |
+| *(No action)*      | CI test failures     | Auto-creates fix tasks with context provided. |
+
+---
+
+## Project Structure
+
+| Path                       | Purpose                                                 |
+| -------------------------- | ------------------------------------------------------- |
+| `docs/PRD.md`              | Definitive Product Requirements Document.               |
+| `docs/DESIGN.md`           | Auto-generated Mermaid diagrams and modules.            |
+| `docs/AgentFacts.md`       | Project stack, integrations, embeddings (auto-updated). |
+| `docs/Progress.md`         | Concise, daily auto-generated progress log.             |
+| `tasks/tasks_master.yaml`  | Central task management (Cursor-managed).               |
+| `tasks/backlog/phase-N.md` | AI-managed atomic tasks backlog.                        |
+| `.cursor/rules/*.mdc`      | AI behavioral rules and workflows.                      |
+
+---
+
+## Built by Indie Hackers, for Indie Hackers
+
+Created specifically for indie hackers, vibe coders, and anyone enthusiastic about effortless, AI-powered development. Focus on your ideas; let Cursor handle the rest.
+
+---
+
+## Support & Contribution
+
+Feel free to raise an issue or contribute with a PR—we’d love your insights and suggestions!
+
+---
+
+## License
+
+MIT Licensed.
