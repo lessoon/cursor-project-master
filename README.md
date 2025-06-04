@@ -13,13 +13,13 @@ cd my-new-project
 # replace PRD placeholders, tweak rules if you must
 git add .
 git commit -m "feat: initial PRD & rules"
-````
+```
 
 Open Cursor → start chat in repo → type:
 
 ```bash
 /INIT
-````
+```
 
 Cursor will:
 
@@ -54,11 +54,11 @@ Cursor will:
 
 ---
 
-## 4 Behind the Scenes
+## 4 How It Works
 
-* **Complexity → Subtasks** mapping (1→1, 2→3, 3→5…) borrowed from Claude-Task-Master → ensures every task ≤ 30 min. (\[github.com]\[4])
-* **Memory Bank ethos**: agents must reread docs + tasks on every session. (\[cline.bot]\[3])
-* **External Upgrade Guard** relies on live changelog search rather than pinned URLs, mirroring Dependabot’s approach. (\[github.blog]\[6])
+* **Complexity → Subtasks** mapping (1→1, 2→3, 3→5…) → ensures every task ≤ 30 min. 
+* **Memory Bank ethos**: agents must reread docs + tasks on every session. 
+* **External Upgrade Guard** relies on live changelog search rather than pinned URLs, mirroring Dependabot's approach. 
 
 ---
 

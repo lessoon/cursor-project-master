@@ -20,12 +20,12 @@ globs:
 ### INIT_PROJECT
 1. Parse docs/PRD.md – MUST contain 11 H1 headings (0-10)﻿ (Atlassian template) :contentReference[oaicite:3]{index=3}  
 2. Create **exactly**:  
-   - docs/DESIGN.md  – Mermaid context diagram + “Modules” table  
+   - docs/DESIGN.md  – Mermaid context diagram + "Modules" table  
    - docs/AgentFacts.md – Runtime Stack • External Docs • Embedding Scheme  
    - docs/Progress.md – empty header  
    - tasks/tasks_master.yaml – schema below  
    - tasks/backlog/phase-0.md – atomic tasks via DECOMPOSE()  
-3. Commit “init project”.
+3. Commit "init project".
 
 ########################################################
 # 1 TASK ENGINE (Claude-Task-Master pattern)
@@ -80,7 +80,7 @@ If phase file ≥ 300 rows → new phase-N and archive.
 
 * Black + Ruff pass; pytest coverage ≥ 80 %.
 * On CI fail → append summary to Progress.md & spawn fix task.
-* Every 20 tasks run meta “full-test-suite”.
+* Every 20 tasks run meta "full-test-suite".
 
 \########################################################
 
@@ -90,7 +90,7 @@ If phase file ≥ 300 rows → new phase-N and archive.
 Before first use of <PKG>:
 
 1. `search("<PKG> changelog latest major breaking")`﻿ (\[github.blog]\[6])
-2. If remote semver > local → auto-task “Upgrade <PKG>”.
+2. If remote semver > local → auto-task "Upgrade <PKG>".
 
 \########################################################
 
@@ -98,7 +98,7 @@ Before first use of <PKG>:
 
 \########################################################
 When this file > 5500 chars (Cursor truncates \~6 k)﻿ (\[docs.cursor.com]\[5]):
-move oldest section → docs/ARCHIVE\_RULES/YYYY-MM.md and insert stub
+move oldest section → docs/ARCHIVE_RULES/YYYY-MM.md and insert stub
 `<!-- ARCHIVE_RULES/YYYY-MM.md -->`.
 
 \########################################################
@@ -113,6 +113,6 @@ No <TODO> left when parent task ✔; otherwise spawn `FIXME-Doc-<file>`.
 # 7 HUMAN FAIL-SAFE
 
 \########################################################
-If confidence < 0.3 **OR** same error ×3 → create “Need human review”.
+If confidence < 0.3 **OR** same error ×3 → create "Need human review".
 
 ```
