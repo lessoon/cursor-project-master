@@ -1,0 +1,118 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: agentdoc-starter core rules (v1.1)
+alwaysApply: true
+globs:
+  - docs/*.md
+  - tasks/**/*.md
+---
+
+########################################################
+# 0 MEMORY & BOOTSTRAP
+########################################################
+- The agent resets each session – ALWAYS read docs/ & tasks/.  
+- If tasks/tasks_master.yaml missing → call INIT_PROJECT.
+
+### INIT_PROJECT
+1. Parse docs/PRD.md – MUST contain 11 H1 headings (0-10)﻿ (Atlassian template) :contentReference[oaicite:3]{index=3}  
+2. Create **exactly**:  
+   - docs/DESIGN.md  – Mermaid context diagram + “Modules” table  
+   - docs/AgentFacts.md – Runtime Stack • External Docs • Embedding Scheme  
+   - docs/Progress.md – empty header  
+   - tasks/tasks_master.yaml – schema below  
+   - tasks/backlog/phase-0.md – atomic tasks via DECOMPOSE()  
+3. Commit “init project”.
+
+########################################################
+# 1 TASK ENGINE (Claude-Task-Master pattern)
+########################################################
+### DECOMPOSE()
+*For each PRD §4 row*  
+1. If ComplexityGuess empty → estimate 1-5.  
+2. Map 1→1, 2→3, 3→5, 4→8, 5→13 subtasks ﻿(Claude-Task-Master) :contentReference[oaicite:4]{index=4}  
+3. Emit subtasks → tasks/backlog/phase-0.md (6 fixed columns).  
+4. Write task-complexity-report.json.
+
+### DEPGRAPH()
+*Build DAG from Depends; if cycle → apply Kahn split*﻿ :contentReference[oaicite:5]{index=5}  
+
+### ROTATE()
+If phase file ≥ 300 rows → new phase-N and archive.
+
+########################################################
+# 2 SCHEMAS — CORE FILES
+########################################################
+- **docs/DESIGN.md**  
+  - Section 1 Mermaid `graph` (≤ 50 nodes)  
+  - Section 2 Modules table: ID | Name | Owner | Dir  
+
+- **docs/AgentFacts.md**  
+  - Runtime Stack (bullets)  
+  - External Docs table: Service | KeywordHint  
+  - Embedding Scheme: Model/Dim/Norm  
+
+- **docs/Progress.md**  
+  - `## YYYY-MM-DD` + ≤ 10 bullet lines/day (emoji + ≤80 chars)  
+
+- **tasks/tasks_master.yaml**  
+  ```yaml
+  total: 0
+  done: 0
+  blocked: []
+  next_ready: []
+  phases: [phase-0]
+  rotations: 0
+  retired: []
+
+
+* **tasks/backlog/phase-X.md** (6 cols)
+  ID | ✔ | Title | Depends | Files | Notes
+
+\########################################################
+
+# 3 CODE & CI
+
+\########################################################
+
+* Black + Ruff pass; pytest coverage ≥ 80 %.
+* On CI fail → append summary to Progress.md & spawn fix task.
+* Every 20 tasks run meta “full-test-suite”.
+
+\########################################################
+
+# 4 EXTERNAL UPGRADE GUARD
+
+\########################################################
+Before first use of <PKG>:
+
+1. `search("<PKG> changelog latest major breaking")`﻿ (\[github.blog]\[6])
+2. If remote semver > local → auto-task “Upgrade <PKG>”.
+
+\########################################################
+
+# 5 RULE ROTATION
+
+\########################################################
+When this file > 5500 chars (Cursor truncates \~6 k)﻿ (\[docs.cursor.com]\[5]):
+move oldest section → docs/ARCHIVE\_RULES/YYYY-MM.md and insert stub
+`<!-- ARCHIVE_RULES/YYYY-MM.md -->`.
+
+\########################################################
+
+# 6 ZERO TODO POLICY
+
+\########################################################
+No <TODO> left when parent task ✔; otherwise spawn `FIXME-Doc-<file>`.
+
+\########################################################
+
+# 7 HUMAN FAIL-SAFE
+
+\########################################################
+If confidence < 0.3 **OR** same error ×3 → create “Need human review”.
+
+```
