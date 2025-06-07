@@ -1,0 +1,40 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Refine or split development tasks that are too complex or large into smaller subtasks
+globs: *
+---
+# Complexity-Based Task Refinement
+
+## Context
+- **When to apply:** Whenever a planned task is **estimated as too complex**, or when the agent encounters difficulty implementing a task as initially defined (e.g. the task involves multiple steps or uncertain sub-problems).
+- **Goal:** Prevent bottlenecks by breaking down complex tasks into simpler subtasks that can be addressed more effectively.
+
+## Requirements
+- **Assess Complexity:** For each task in the plan, evaluate its scope. If a task covers multiple functionalities or could overwhelm the context window, mark it as a **Complex Task**.
+- **Split Criteria:** Split a complex task if it:
+  - Contains multiple distinct objectives that can be separated.
+  - Depends on research or unknowns that can be isolated.
+  - Could be implemented and tested in independent parts.
+- **Subtask Creation:** When splitting:
+  - Replace the original task with a set of **subtasks** that together accomplish the goal.
+  - Ensure each subtask is specific and achievable in a single agent iteration or short cycle.
+  - Inherit references to requirements from the parent task, and add more detail if needed per subtask.
+- **Document Update:** Update the task list/documentation to reflect the new subtasks. Maintain a hierarchy or numbering (e.g., 2a, 2b) so it's clear they derive from the original task.
+- **Iterative Refinement:** If a subtask is still too complex, this rule can apply recursively until tasks are at an actionable granularity.
+
+## Examples
+<example>
+**Original Task:** Implement User Profile Page (frontend & backend) – *This involves UI, API, and database.*  
+**Refinement:**  
+- Subtask 1: Create Profile UI in React – _Design profile page components (display user info, edit form)._  
+- Subtask 2: Profile API Endpoint – _Develop backend API to fetch and update profile data (GET/PUT /api/profile).\_  
+- Subtask 3: Database Migration – _Add new fields in users table for profile info (bio, avatar URL)._  
+</example>
+
+<example type="invalid">
+**Task:** "Implement Shopping Cart and Recommender System" – (This should be split into separate tasks; combining unrelated features is not acceptable.)
+</example>

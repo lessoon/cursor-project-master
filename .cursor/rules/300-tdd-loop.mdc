@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Use a Test-Driven Development workflow for implementing features and bug fixes
+globs: *
+---
+# Test-Driven Development Workflow
+
+## Context
+- **When to apply:** During feature implementation or bug fixing, especially when the functionality can be verified with automated tests.
+- **Goal:** Encourage development in small, verifiable steps by writing tests first, then code, using test results as feedback.
+
+## Requirements
+- **Write Tests First:** Before coding a new feature or fix, create appropriate **unit or integration tests** that specify the expected behavior. Clearly state that we are doing TDD so the agent knows not to jump into implementation yet.
+- **Fail Fast:** Run the new tests to confirm they **fail initially** (since the feature isn’t implemented). This ensures the tests are valid and catches any issues in test logic.
+- **Implement in Small Steps:** Write the minimal code to attempt to pass the tests. Do **not** modify the tests during implementation (the tests are the source of truth).
+- **Iterate:** Re-run the test suite. If tests still fail, analyze the failures and **incrementally improve** the code. Continue this loop: code -> run tests -> refine, until all targeted tests pass. Use the test results as immediate feedback for the agent’s next action.
+- **Confirmation & Commit:** Once tests pass and the solution is satisfactory, finalize the code. Optionally, commit the changes and update documentation (if needed) to reflect the new functionality.
+
+## Examples
+<example>
+1. **Test First:** _“Write a test for the calculateTax function to ensure 5% tax is applied correctly to prices.”_  
+2. **Run & Fail:** (Agent runs tests, sees failure: `AssertionError: expected 10.5, got 0`)  
+3. **Code:** _“Implement calculateTax to return price * 1.05 (5% increase).”_  
+4. **Run & Pass:** Tests pass.  
+5. **Refactor (if needed):** _“Refactor calculateTax to handle rounding properly.”_  
+</example>
+
+<example type="invalid">
+**Antipattern:** Writing a large chunk of feature code without any tests, then trying to retroactively add tests. (Breaks the TDD loop and may miss edge cases).
+</example>

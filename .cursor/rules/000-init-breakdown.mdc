@@ -1,0 +1,36 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Break down project requirements into an actionable task plan at initialization
+globs: *
+---
+# Project Initialization & Task Breakdown
+
+## Context
+- **When to apply:** At the start of a project, **after** the Product Requirements (PRD) and Technical Specification are finalized (or whenever new high-level requirements are introduced).
+- **Goal:** Establish a clear plan by parsing the requirements documents and generating structured development tasks.
+
+## Requirements
+- **Parse Requirements:** Read the PRD and Tech Spec in detail. Identify all features, user stories, and system components described.
+- **Task Generation:** For each feature or component, create one or more actionable development tasks. Each task should be **clear, testable, and traceable** to the requirements. Include:
+  - A short **Title** (task name).
+  - A **Description** with details, acceptance criteria, or any constraints.
+  - References to relevant sections of the PRD or Tech Spec (e.g. feature IDs or requirement IDs) for context.
+  - **Priority** or order if applicable, and any **dependencies** between tasks.
+- **Shared Format:** Use a consistent format so that both humans and AI agents can understand the tasks. This creates a shared language between developers and the AI about what needs to be done.
+- **No Code Yet:** Do **not** produce code at this stage. Focus on *what* the system should do, not *how* to code it.
+
+## Examples
+<example>
+**Feature:** User Authentication (from PRD Section 3.1)
+- **Task 1:** Implement Signup API – _Allow new users to register with email & password. Save credentials securely (hash passwords) in DB. [Ref: PRD 3.1.2]_  
+- **Task 2:** Implement Login API – _Enable users to log in and receive an auth token. Include validation and error handling. [Ref: PRD 3.1.3]_  
+- **Task 3:** Unit Tests for Auth – _Write tests for signup and login (success and failure cases)._  
+</example>
+
+<example type="invalid">
+- **Bad Practice:** "Build the whole authentication system." (Too broad – should be broken into specific tasks like above)
+</example>

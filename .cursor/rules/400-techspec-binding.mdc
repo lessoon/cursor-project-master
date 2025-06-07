@@ -1,0 +1,31 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Ensure implementation decisions closely follow the Technical Specification and PRD; keep documentation and code aligned
+globs: *
+---
+# Tech Spec & Requirements Binding
+
+## Context
+- **When to apply:** During development whenever the agent is implementing a feature or making design decisions that are described in the Technical Specification (TECH_SPEC.md) or PRD.
+- **Goal:** Keep the code and design docs in sync, and make sure the agent leverages the guidance in the spec instead of deviating or guessing.
+
+## Requirements
+- **Consult the Spec:** Before writing code for a task, check the TECH_SPEC and PRD sections relevant to that task. Extract key details like class names, APIs, data models, or specific algorithms that were planned.
+- **Follow Design Decisions:** Adhere to the architectural decisions and patterns outlined in TECH_SPEC (e.g., use the recommended libraries, follow the prescribed module structure, abide by data models in DATA_MAP) unless instructed otherwise. The agent should not introduce new design patterns that conflict with the spec.
+- **Consistency:** Ensure terminology and definitions used in code (e.g., naming of functions, database fields) match those in the documentation. This avoids confusion (for example, if the PRD calls something “Organization” but the code calls it “Company”, that mismatch should be avoided).
+- **Document Deviations:** If a change from the spec is necessary (perhaps the spec was incomplete or a better approach is discovered), **notify and update** the documentation:
+  - Prefix the explanation in the conversation with `[Design Update]:` and describe the change.
+  - Propose edits to the TECH_SPEC (and PRD if needed) to incorporate the new decision, so docs remain a “single source of truth”.
+- **Tech Spec as Context:** If the TECH_SPEC is lengthy or complex, use Cursor’s capability to include it as needed context (e.g., via `@` references or selecting it in the context window) to avoid missing details.
+
+## Examples
+<example>
+While implementing the *“User Profile Storage”* task, refer to TECH_SPEC.md Section 4: _Data Model_, which specifies a **UserProfile** table with fields (user_id, bio, avatar_url). 
+- **Action:** The agent uses exactly those field names in the database migration code and the ORM models, ensuring consistency with the spec.
+- **Design Update (if needed):** The spec suggested storing images in the database, but during implementation the agent finds it more efficient to use cloud storage for avatars. The agent writes:  
+  `[Design Update]: Proposal to use S3 for storing avatar images instead of the database, as it improves performance and scalability. If approved, will update TECH_SPEC Section 4 accordingly.` 
+</example>
