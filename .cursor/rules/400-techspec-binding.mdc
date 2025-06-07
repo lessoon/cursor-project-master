@@ -4,29 +4,51 @@ globs:
 alwaysApply: true
 ---
 ---
-description: Ensure implementation decisions closely follow the Technical Specification and PRD; keep documentation and code aligned
-globs: *
+description: Gracefully handles mid-project changes by updating source documents and then triggering a full, intelligent project re-plan.
+globs: ["*"]
 ---
-# Tech Spec & Requirements Binding
+# Change Management & Re-Planning Trigger (v2.0)
 
 ## Context
-- **When to apply:** During development whenever the agent is implementing a feature or making design decisions that are described in the Technical Specification (TECH_SPEC.md) or PRD.
-- **Goal:** Keep the code and design docs in sync, and make sure the agent leverages the guidance in the spec instead of deviating or guessing.
+- **When to apply:** When the user introduces a new feature, changes an existing requirement, or requests a major refactor.
+- **Goal:** To integrate changes systematically by updating specifications first, then re-running the planning engine to intelligently update the file-based task system.
 
 ## Requirements
-- **Consult the Spec:** Before writing code for a task, check the TECH_SPEC and PRD sections relevant to that task. Extract key details like class names, APIs, data models, or specific algorithms that were planned.
-- **Follow Design Decisions:** Adhere to the architectural decisions and patterns outlined in TECH_SPEC (e.g., use the recommended libraries, follow the prescribed module structure, abide by data models in DATA_MAP) unless instructed otherwise. The agent should not introduce new design patterns that conflict with the spec.
-- **Consistency:** Ensure terminology and definitions used in code (e.g., naming of functions, database fields) match those in the documentation. This avoids confusion (for example, if the PRD calls something “Organization” but the code calls it “Company”, that mismatch should be avoided).
-- **Document Deviations:** If a change from the spec is necessary (perhaps the spec was incomplete or a better approach is discovered), **notify and update** the documentation:
-  - Prefix the explanation in the conversation with `[Design Update]:` and describe the change.
-  - Propose edits to the TECH_SPEC (and PRD if needed) to incorporate the new decision, so docs remain a “single source of truth”.
-- **Tech Spec as Context:** If the TECH_SPEC is lengthy or complex, use Cursor’s capability to include it as needed context (e.g., via `@` references or selecting it in the context window) to avoid missing details.
-- Before writing any front-end CSS / Tailwind classes, load STYLE_GUIDE.md (if present) and apply the defined tokens for colors, radii, spacing, and component variants.
 
-## Examples
-<example>
-While implementing the *“User Profile Storage”* task, refer to TECH_SPEC.md Section 4: _Data Model_, which specifies a **UserProfile** table with fields (user_id, bio, avatar_url). 
-- **Action:** The agent uses exactly those field names in the database migration code and the ORM models, ensuring consistency with the spec.
-- **Design Update (if needed):** The spec suggested storing images in the database, but during implementation the agent finds it more efficient to use cloud storage for avatars. The agent writes:  
-  `[Design Update]: Proposal to use S3 for storing avatar images instead of the database, as it improves performance and scalability. If approved, will update TECH_SPEC Section 4 accordingly.` 
-</example>
+When a change request is received, I must follow this precise sequence:
+
+**1. Acknowledge and Pause:**
+   - Acknowledge the request and state that I will pause my current active task to process the change. If a task is in progress, I will move it from `/project/tasks/in_progress/` back to `/project/tasks/todo/`.
+
+**2. Update Source Documents:**
+   - Modify the relevant "source of truth" documents in the `/docs` directory. This is the first and most critical step.
+   - Inform the user about which documents have been updated.
+
+**3. Trigger the Project Engine for Intelligent Re-planning:**
+   - After updating the documents, I will explicitly call the `000-project-engine` rule.
+   - **Intelligent Diffing:** The engine's re-planning process is not a blind overwrite. It will:
+     a. Scan the new/updated docs.
+     b. Compare them against the existing tasks in `/project/tasks/`.
+     c. **Generate new tasks** for new requirements and place them in `/project/tasks/todo/`.
+     d. **Identify obsolete tasks** (whose requirements no longer exist). Instead of deleting, I will move them to a `/project/tasks/obsolete/` directory for audit purposes.
+     e. **Identify tasks needing modification** and flag them for human review or attempt to auto-update them.
+
+**4. Communicate the Outcome and Resume Work:**
+   - Once the Project Engine has finished, I will summarize the changes to the plan (e.g., "5 new tasks created, 2 tasks marked obsolete").
+   - I will then consult the updated `project_status.md` and resume work on the highest-priority active task.
+
+**Example Interaction:**
+> **User:** "The login flow needs to be changed to use magic links instead of passwords."
+>
+> **Agent:** `[Change Request Acknowledged] I will process the change to a magic link login flow. My current task T003 will be paused and moved back to the 'todo' queue.
+> 
+> 1.  **Documentation Update:** I have updated `docs/PRD.md` and `docs/TECH_SPEC.md` to reflect the new magic link authentication method. The password-based login feature is now marked as removed.
+> 2.  **Triggering Re-plan:** I am now invoking the Project Engine to reconcile our plan with these changes.
+> 
+> ... *[Engine runs]* ...
+> 
+> **Re-plan Complete.** The project plan has been updated:
+> - **Tasks Obsoleted:** T003 (Password Login API) and T006 (Password Reset UI) have been moved to `/project/tasks/obsolete/`.
+> - **New Tasks Created:** T028-T030 have been created in `/project/tasks/todo/` for implementing the magic link flow.
+> 
+> I will now resume work based on the updated plan. The new active task is T028."

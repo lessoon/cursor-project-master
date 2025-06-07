@@ -1,29 +1,34 @@
-# Product Requirements Document
+# Product Requirements Document: [Product Name]
 
 ## 1. Executive Summary
-*[Briefly summarize the product idea and goals. Include the problem being solved, the target users, and key success metrics or KPIs.]*
+*[A one-paragraph summary. What is the problem, who is it for, and what is the core solution?]*
 
-## 2. Background & Motivation
-*[Provide context: Why is this product or feature needed? Include any market research, user feedback, or strategic objectives driving this initiative.]*
+## 2. Target Audience & Problem Statement
+- **Primary User:** *[e.g., Individual developers, small marketing teams]*
+- **Problem:** *[e.g., Developers waste time on boilerplate code when starting new projects.]*
 
-## 3. User Needs / Use Cases
-*[Describe the primary use cases or user stories. Who are the users and what do they want to accomplish? List each major use case with a brief story or scenario.]*
+## 3. Core Features & User Stories
+*[List each major feature. For each, provide user stories.]*
 
-## 4. Features
-*[List the product’s features or requirements. Each feature should have a title and a description. Focus on **what** the feature is and **why** it's needed, not how to implement it. Prioritize them if necessary.]*
+### 3.1 Feature: [e.g., AI-Powered Code Generation]
+- **As a** developer, **I want to** provide a high-level prompt, **so that** I can get a complete project scaffold generated automatically.
 
-- **Feature A:** *[Description of feature A and what value it provides to the user]*  
-- **Feature B:** *[Description of feature B]*  
-- *...*
+### 3.2 Feature: [e.g., Task Management]
+...
 
-## 5. Scope and Limitations
-*[Clarify what is in scope versus out of scope. This manages expectations. E.g., "In scope: user authentication and basic profile. Out of scope: social media login."]*
+## 4. Non-Functional Requirements (NFRs)
+*[This section is CRITICAL for the agent's planning.]*
+- **Performance:** *[e.g., API endpoints must respond in under 200ms under a load of 100 RPS.]*
+- **Scalability:** *[e.g., The system must support 10,000 concurrent users in v1.]*
+- **Security:** *[e.g., All user data must be encrypted at rest. Must be compliant with SOC 2.]*
+- **Accessibility:** *[e.g., Frontend must meet WCAG 2.1 AA standards.]*
 
-## 6. Success Criteria
-*[Define how success will be measured. These can be quantitative metrics (e.g., performance benchmarks, user engagement targets) or qualitative outcomes.]*
+## 5. Scope: In & Out
+- **In Scope for v1:**
+  - Feature A, Feature B
+- **Out of Scope for v1:**
+  - SSO integration, mobile app support.
 
-## 7. Assumptions
-*[List any assumptions made (about user behavior, technical constraints, dependencies on other systems, etc.).]*
-
-## 8. Risks and Open Questions
-*[Identify potential risks, unknowns, or things that need validation. E.g., "Open question: Will users need an offline mode?" or "Risk: dependency on an external API rate limits."]*
+## 6. Assumptions & Dependencies
+- **Assumptions:** *[e.g., Users have a stable internet connection.]*
+- **Dependencies:** *[e.g., Relies on the OpenAI API for completions.]*
