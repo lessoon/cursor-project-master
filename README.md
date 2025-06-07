@@ -1,4 +1,4 @@
- AI-Native Development Workflow with Cursor Agent <!-- omit in toc -->
+# AI-Native Development Workflow with Cursor Agent <!-- omit in toc -->
 
 This repository implements a comprehensive, AI-driven development workflow using Cursor’s AI agent. It is designed to facilitate **front-end, back-end, full-stack, or AI application development** by leveraging an AI assistant for planning, coding, and documentation. The system is inspired by state-of-the-art practices from Anthropic’s Claude Code, OpenAI’s product documentation standards, and research from Stanford and others on AI pair programming.
 
