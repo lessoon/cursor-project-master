@@ -21,6 +21,7 @@ globs: *
   - Prefix the explanation in the conversation with `[Design Update]:` and describe the change.
   - Propose edits to the TECH_SPEC (and PRD if needed) to incorporate the new decision, so docs remain a “single source of truth”.
 - **Tech Spec as Context:** If the TECH_SPEC is lengthy or complex, use Cursor’s capability to include it as needed context (e.g., via `@` references or selecting it in the context window) to avoid missing details.
+- Before writing any front-end CSS / Tailwind classes, load STYLE_GUIDE.md (if present) and apply the defined tokens for colors, radii, spacing, and component variants.
 
 ## Examples
 <example>

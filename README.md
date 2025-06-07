@@ -15,7 +15,7 @@ This repository implements a comprehensive, AI-driven development workflow using
 
 This project’s development process is managed through a set of **Markdown documents** and **Cursor rules** that keep the AI agent aligned with our goals. The main idea is to treat the AI as a team member that can understand project requirements, break down tasks, write code, and even update documentation as things change. We have structured the repository to support this:
 
-- **Documentation**: Key planning docs like `PRD.md` (Product Requirements), `TECH_SPEC.md` (Technical Specs), `UX_FLOW.md`, `TEST_PLAN.md`, `DATA_MAP.md`, and `ARCHITECTURE_GUIDE.md` are included. These guide the AI and humans alike in understanding what to build.
+- **Documentation**: Key planning docs like `PRD.md` (Product Requirements), `TECH_SPEC.md` (Technical Specs), `UX_FLOW.md`, `STYLE_GUIDE.md`, `TEST_PLAN.md`, `DATA_MAP.md`, and `ARCHITECTURE_GUIDE.md` are included. These guide the AI and humans alike in understanding what to build.
 - **Cursor Rules**: Under `.cursor/rules/`, we have custom rules that instruct the Cursor AI agent on our workflow (e.g., always do task breakdown on init, follow TDD, update docs on changes, etc.).
 - **Codebase**: (This section would describe where the code lives, once generated).
 
@@ -34,12 +34,13 @@ By combining structured documentation and AI agent rules, we ensure development 
 │       ├── 400-techspec-binding.mdc     # Rule to align code with Tech Spec
 │       └── 410-change-management.mdc    # Rule for handling requirement changes
 ├── docs/
-│   ├── PRD.md                  # Product Requirements Document
+│   ├── PRD.md                   # Product Requirements Document
 │   ├── TECH\_SPEC.md            # Technical Specification
-│   ├── UX\_FLOW\.md              # User Experience Flows
+│   ├── UX\_FLOW\.md             # User Experience Flows
 │   ├── TEST\_PLAN.md            # Test Plan
 │   ├── DATA\_MAP.md             # Data models and schema
 │   └── ARCHITECTURE\_GUIDE.md   # High-level architecture and guidelines
+│   └── STYLE\_GUIDE.md          # Design Style guidelines
 └── src/ (or frontend/, backend/ etc.)   # Source code directories (to be generated)
 
 ```
@@ -53,7 +54,7 @@ Each rule file is written in Markdown (MDC format) with a header and instruction
 Our development workflow consists of two main phases:
 
 **Phase 1: Design & Documentation (with AI assistance)**  
-We begin with an idea and interact with an AI (like Claude or GPT-4) to produce all planning documents. This involves:
+We begin with an idea and interact with an AI (like Claude or ChatGPT) to produce all planning documents. This involves:
 - Drafting the **PRD** to define the product in natural language (problem, users, features, etc.).
 - Drafting the **Technical Spec** to outline how we’ll build it (architecture, data models, technical decisions).
 - Laying out **UX Flows** for key user interactions.
