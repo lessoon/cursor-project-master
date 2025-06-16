@@ -1,0 +1,19 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Inject AGENT charter; load sub-rules; optional memory sync.
+alwaysApply: true
+---
+
+@AGENT.md           # charter is always loaded
+
+# hooks for future mono-repo sub-projects
+@frontend/.cursor/rules
+@backend/.cursor/rules
+
+{% if env.EXTERNAL_MEMORY %}
+<call memory.write file="project/AGENT.md" namespace="cursor-pm"/>
+{% endif %}

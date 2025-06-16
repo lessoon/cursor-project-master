@@ -1,103 +1,137 @@
-# Cursor Project Master
+# Cursor Project Master (CPM)
 
-A framework for building software with AI agents. It provides the structure and workflow for an AI to manage a project from idea to implementation, minimizing human intervention.
+**Turn PRD into fully deployed apps.**
 
--   **Structured Autonomy:** Guides an AI agent through a robust, file-based system, turning abstract goals into concrete tasks and code.
--   **Persistent Memory:** The `/project` directory acts as the agent's external brain, ensuring project state and history are maintained across sessions.
--   **Efficiency by Design:** Optimizes for minimal token usage and cognitive load, allowing the agent to focus on implementation, not just administration.
--   **Human-in-the-Loop, On-Demand:** You provide the strategic vision; the agent handles the tactical execution. You intervene when you want, not because you have to.
+No coding. Just structured documents and an autonomous AI that builds, tests, and deploys your app.
 
 ---
 
-## The Workflow
+## What is CPM?
 
-This system divides the development process into two distinct phases, ensuring a clean separation between strategic planning and automated execution.
+Cursor Project Master transforms a simple product description into a complete, production-ready web application. Describe your idea once, clearly, in Markdown. CPM handles everything else:
 
-#### **Phase 1: Conception (Human-led, AI-assisted)**
+- **Document-driven:** A single Markdown-based Product Requirement Document (PRD) and Technical Specification guide the entire development cycle.
+- **Transparent workflow:** Tasks, plans, and decisions are neatly tracked in simple text files—completely visible and editable.
+- **Self-improving agent:** Built-in self-reflection, prompt evolution, and error recovery make your project smarter with every step.
 
-This is where you, the project visionary, define the "what" and "why". Your goal is to populate the `/docs` directory with high-quality specifications. Use the provided templates as your guide.
-
-**How to Generate High-Quality Docs with an LLM (ChatGPT, Claude, Gemini):**
-
-To get the best results, use a multi-turn conversation. Start with a high-level prompt, then refine.
-
-**Step 1: The Initial Prompt**
-
-Copy and paste the following into your LLM of choice. Fill in the `[bracketed]` sections.
-
-> **Prompt:**
->
-> Act as a senior product manager and a principal engineer. I have an idea for a project: `[Briefly describe your project idea, e.g., "a minimalist markdown note-taking web app for writers"]`.
->
-> My target audience is `[Describe your target users, e.g., "professional writers and bloggers who value simplicity"]`.
->
-> The core problem I'm solving is `[Describe the pain point, e.g., "existing note apps are bloated with features and distracting"]`.
->
-> Using the templates provided below, please generate a complete set of initial project documents: PRD, Tech Spec, and a Style Guide. Ask me clarifying questions if any part of my request is ambiguous, especially regarding non-functional requirements (performance, security, scalability).
->
-> **[Paste the full content of `docs/PRD.md`, `docs/TECH_SPEC.md`, and `docs/STYLE_GUIDE.md` templates here]**
-
-**Step 2: The Conversation**
-
-The LLM will likely ask you questions. This is the most valuable part of the process. Answer them clearly. This conversation refines the project's vision.
-
-*   *Example LLM Question:* "For the note-taking app, what level of security is needed? Should notes be end-to-end encrypted?"
-*   *Your Answer:* "Good question. For v1, standard encryption at rest is sufficient. E2EE is out of scope for now."
-
-**Step 3: Finalize and Save**
-
-Once you are satisfied with the generated content, copy it into the respective files within the `/docs` directory. Your project's "constitution" is now written.
-
-#### **Phase 2: Execution (AI-led, Human-supervised)**
-
-This is where the Cursor Agent takes over. It will read your specifications and manage the entire implementation process.
-
-**How to Run the Agent:**
-
-1.  **Clone this Repository:** Start with a fresh clone of this project master.
-2.  **Populate `/docs`:** Complete Phase 1 to fill the `/docs` directory with your project's specifications.
-3.  **Initiate the Agent in Cursor:** Open the project in Cursor and start a conversation with the agent.
-    > **Prompt:** "Initialize this project. Read the specifications in `/docs` and generate the project plan."
-4.  **Observe and Guide:** The agent will now execute its `000-project-engine` rule.
-    *   It will validate your docs and may ask final clarifying questions.
-    *   It will generate the code scaffolding and the entire task system in `/project`.
-    *   It will then begin executing tasks one by one, updating its status in the `/project` directory.
-5.  **Monitor Progress:** You can observe the project's real-time status by looking at the `project/project_status.md` file and the movement of task files between `todo`, `in_progress`, and `done` directories.
-6.  **Manage Change:** If you need to change a requirement, simply tell the agent. It will trigger its `400-change-manager` rule, update the docs, re-plan, and seamlessly continue its work.
+CPM is your shortest path from idea to deployment, with minimal friction and maximum clarity.
 
 ---
 
-## Project Structure Explained
+## Quick Start (from zero to deployed)
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/your-name/cursor-project-master my-app
+cd my-app
+```
+
+### Step 2: Write Your Docs
+
+Fill in the provided templates located at `docs/_templates/`. Clearly define your product:
+
+* `PRD.md`: Product vision, features, acceptance criteria
+* `TECH_SPEC.md`: Technical overview, frameworks, APIs, deployment preferences
+* `DATA_MAP.md`: Your data structure clearly described
+* `UX_FLOW.md`: User journeys and interactions
+* `STYLE_GUIDE.md`: UI elements and visual styling rules
+
+**Tip**: Use ChatGPT or Gemini to assist:
+
+```
+Act as a world-class product manager and a principal software architect. Your task is to help me create the initial documentation blueprint for a new software project. You must be rigorous, structured, and ask clarifying questions if my idea is ambiguous.
+
+## CONTEXT
+You will be generating the content for a set of specific Markdown templates that an autonomous AI agent will use to build the entire application. The agent requires extreme clarity and structure. It cannot make assumptions.
+
+## MY IDEA
+[Your IDEA]
+
+## YOUR TASK
+Based on my idea, generate the content for the following files(PRD/TECH SPECH/...). For each file, present the content inside a Markdown code block.
+```
+
+Save these completed documents in the `/docs` directory.
+
+### Step 3: Let the Agent Work
+
+Open your repo in **Cursor**, switch to **Agent → Auto-run**, and type:
+
+```
+init
+```
+
+### Step 4: Set Deployment Secrets (one-time)
 
 ```bash
-├── .cursor/
-│   └── rules/             # The agent's core logic and workflow instructions.
-├── docs/
-│   ├── _templates/        # High-quality templates for project specification.
-│   └── ...                # Other documents (PRD, TECH_SPEC, etc.)
-├── project/
-│   ├── _templates/        # Templates for atomic epics and tasks.
-│   ├── project_status.md  # The main dashboard and agent's entry point.
-│   ├── epics/             # High-level feature folders.
-│   └── tasks/             # The partitioned, file-based task database.
-│       ├── todo/
-│       ├── in_progress/
-│       ├── done/
-│       └── ...
-└── src/                   # The source code, generated by the agent.
+npx vercel login
+npx vercel link
+npx vercel env pull
+```
+
+*(For other hosts like Render or Fly.io, follow their environment setup.)*
+
+### Step 5: Watch Progress
+
+* Tasks automatically move through stages (`todo`, `in_progress`, `done`).
+* Real-time status updates appear in `project/project_status.md`.
+* Every validated commit auto-deploys a preview. Merging into `main` deploys production instantly.
+
+---
+
+## Adding New Features (One-Minute Tutorial)
+
+### Step 1: Edit Your PRD
+
+In `docs/PRD.md`, add your feature clearly:
+
+```markdown
+## New Feature — Image Upload
+Users can attach images (JPEG/PNG ≤ 5MB). Store them on Supabase Storage; preview within editor.
+```
+
+### Step 2: Inform the Agent
+
+In the Cursor chat window, simply say:
+
+```
+Add the "Image Upload" feature from PRD.md.
+```
+
+The agent automatically updates specs, plans tasks, writes code, runs tests, and deploys.
+
+---
+
+## Directory Structure
+
+```
+.cursor/rules/              Agent’s operating guidelines
+docs/                       Product and tech specs, clearly structured
+project/
+  _templates/               Task & epic templates
+  tasks/                    Kanban-style task management (todo/in_progress/done)
+  TROUBLESHOOTING_LOG.md    Agent’s reflections and improvements
+  project_status.md         Real-time progress overview
+scripts/                    Reporting and prompt evolution utilities
+.github/workflows/          CI/CD and event-driven evolution automation
+src/                        Auto-generated project code
 ```
 
 ---
 
-## Future Roadmap
+## FAQs
 
-This framework is designed to be extensible. Our vision is to continuously enhance the synergy between human developers and AI agents.
+| Question                                       | Answer                                                                                                                                            |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Am I locked into a specific stack?**         | No. Simply edit your stack preference in `TECH_SPEC.md` (Next.js, SvelteKit, FastAPI, etc.). CPM adapts automatically.                            |
+| **Can I manually intervene?**                  | Absolutely. Your edits become the new ground truth. CPM respects your changes and continues smoothly.                                             |
+| **Where does CPM store "memory"?**             | Everything stays in clear, local files (`AGENT.md`, `TROUBLESHOOTING_LOG.md`, `DECISION_LOG.md`). No hidden memory unless explicitly enabled.     |
+| **What happens when tests keep failing?**      | CPM reflects, revises plans after 3 failures, and attempts a competitive patch after 5. Edit or remove tasks freely.                              |
+| **How is prompt evolution triggered?**         | Automatically when troubleshooting logs change significantly, or manually via the GitHub Actions workflow. CPM suggests improvements through PRs. |
+| **How should I respond if CPM has questions?** | Reply in plain English. CPM updates specs, adjusts plans, and resumes immediately.                                                                |
 
--   **[Vision] Visual Kanban Board Interface**
-    The current file-based task system (`/project/tasks/`) is the perfect backend for a visual Kanban board. A future enhancement could be a Cursor extension or a simple web app that reads this directory and renders a fully interactive UI, similar to modern project management tools. Dragging a card would execute a `mv` command in the background, providing a seamless visual interface to the agent's brain.
+---
 
--   **[Vision] Multi-Agent Collaboration**
-    The atomic, file-based nature of the task system naturally supports parallelism. We envision a future where multiple specialized agents (e.g., a "Frontend Specialist Agent," a "Security Analyst Agent") can work on different tasks concurrently without conflict, dramatically accelerating development speed.
+## License & Contributing
 
--   **[Community] Your Ideas Here**
-    This is an open framework. We encourage contributions, new ideas for rules, and better templates. Fork it, experiment with it, and help us define the future of software development.
+MIT License — Fork, build, innovate freely. Contributions via PRs are welcome and encouraged.

@@ -1,0 +1,30 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Research spikes · ADR logging · Reflexion v2 · line-patch · self-duel.
+---
+
+## A · Research spike
+Unknown tech → create `research-T<ID>.md`, study, summarise, append ADR.
+
+## B · ADR
+Every significant decision → append to `/docs/DECISION_LOG.md`.
+
+## C · Failure → Reflection (R² / Reflexion v2)
+On each test fail: `attempts += 1`.  
+If `attempts ≥ 3`:  
+  1. Output `*Explanation:* <root cause>` plus patch.  
+  2. Self-score 1-5; if score ≤ 3 rewrite reflection.  
+  3. Tip the user: “You may switch to Claude-4 Opus or GPT-4.1.”
+
+## D · Execution-guided line patch
+If stack trace includes `file:line`, limit patch to that line, then re-run tests.
+
+## E · Competitive self-duel
+If the same test fails 5×:  
+  • Generate *Patch A* and *Patch B* in one response, critique both, apply winner.  
+  • Log result in `/project/TROUBLESHOOTING_LOG.md`.  
+  • Reset `attempts`.

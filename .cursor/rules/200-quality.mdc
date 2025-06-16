@@ -1,0 +1,35 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Contract-first · TDD · no hard-coding · CI green · lint/security · event-based coverage regeneration.
+---
+
+1. **Contract-first**  
+   Zod schemas in `/docs/schemas/` are the single source of truth; generate
+   TypeScript types and Prisma models from them.
+
+2. **TDD (red → green → refactor)**  
+   Never implement before a failing test exists; unit tests and E2E tests must
+   cover every acceptance criterion.
+
+3. **No hard-coding**  
+   Secrets, base-URLs, and magic constants live only in `/config` or
+   environment variables.
+
+4. **Definition of done**  
+   A task / Epic is “done” only when all tests, lint, audit, and deploy steps
+   in CI are green.
+
+5. **Lint & security gates**  
+   `eslint --max-warnings=0`, `prettier --check .`,  
+   `npm audit --production` → zero *High* or *Critical* vulnerabilities.
+
+6. **Coverage gate & auto-regen**  
+   *Line coverage must stay ≥ 70 %.*  
+   If coverage drops below threshold **or** any file inside `/docs/schemas/`
+   changes **or** the engine archives an Epic:  
+   > “Create a new ‘regen-tests’ task that instructs the agent to generate
+   > fresh LLM-based tests, then re-run CI until coverage ≥ 70 % again.”

@@ -1,0 +1,73 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Planner → scaffold selector → TDD loop → CI/deploy gate → progress report.
+---
+
+# ───────────────  PHASE 1 · INIT  ───────────────
+
+1. **Validate docs**  
+   Read `/docs/*`.  If PRD core features, NFR, or `frontendStack` / `backendStack`
+   keys are missing → pause and ask the user.
+
+2. **Detect stack keys** (defaults: nextjs-14 | prisma | tailwind | supabase | vercel).
+
+3. **Search official starter**  
+   • Query Vercel template catalog or GitHub.  
+   • Pick a template whose owner is **vercel/** or stars ≥ 500 and updated < 180 days.  
+   • If project needs multiple runtimes → run `npx create-turbo@latest`.
+
+4. **CLI scaffold** – run the starter’s official CLI, e.g.  
+   ```bash
+   vercel init <template>           # Vercel template  
+   npx create-next-app --ts --tailwind  
+   npm create svelte@latest
+   ```
+
+If scaffold fails, roll back directory and prompt the user.
+
+5. **Clean demo files** – delete framework sample routes/pages.
+
+6. **Tailwind / config patch** – if Tailwind expected but `tailwind.config.js`
+   missing → `npx tailwindcss init -p`.
+
+7. **Planner → JSON graph** – if PRD > 5000 tokens *or* tag `planner: advanced`,
+   ask the model to output a Graph-of-Thoughts JSON (`vertices`, `edges`,
+   `criteria`).  Save as `/project/plan.json` and create a task for each leaf.
+
+8. **Internal debate** – if `epicCount > 20` *or* graph depth > 3, prompt:
+
+   > “Generate **two** alternative high-level plans, critique each, then choose the
+   > better and update plan.json.”
+
+9. **Initial status** – write `/project/project_status.md`; move first task to
+   `/project/tasks/in_progress/`.
+
+# ───────────────  PHASE 2 · TASK LOOP  ───────────────
+
+For active task **T<ID>**:
+
+A. **TDD** – write failing test → minimal implementation → `npm run lint && npm test && npm run build`.
+
+B. **CI/deploy gate** – commit; GitHub Actions runs.
+If failure is *only* missing `VERCEL_TOKEN` or `SUPABASE_URL` → pause and
+ask user to run the Secrets Wizard; otherwise mark task failed.
+
+C. **Archive & status** – on green CI:
+
+```bash
+mv project/tasks/in_progress/T<ID>.md  project/tasks/done/$(date +%Y-Q%q)/
+```
+
+Update `project_status.md`.
+
+D. **Progress report** – every 5 completed tasks *or* when an Epic finishes:
+`python scripts/report.py`.
+
+E. **Blocked-node re-plan** – if any node in `plan.json` is `"status":"blocked"`,
+recompute just that subtree and regenerate tasks.
+
+F. **Select next task** – move next item from `/todo` → `/in_progress` and repeat.
