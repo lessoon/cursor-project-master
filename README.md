@@ -1,47 +1,53 @@
 # Cursor Project Master (CPM)
 
-**From concept to launch, just write a PRD—and let Cursor do the rest.**
+> **From concept to launch, with just your PRD.**
 
-Forget coding, skip the boilerplate.
-Write down what your app should do, and CPM handles the build, testing, and deployment automatically.
+Forget about writing code and dealing with boilerplate.
 
-* 📝 Jot down your idea clearly
-* 🤖 Cursor takes it from there
-* 🚀 Launch right away, tweak whenever
-
-## What is CPM?
-
-Cursor Project Master transforms a simple product description into a complete, production-ready application. Describe your idea once, clearly, in Markdown. CPM handles everything else:
-
-- **Document-driven:** A single Markdown-based Product Requirement Document (PRD) and Technical Specification guide the entire development cycle.
-- **Transparent workflow:** Tasks, plans, and decisions are neatly tracked in simple text files—completely visible and editable.
-- **Self-improving agent:** Built-in self-reflection, prompt evolution, and error recovery make your project smarter with every step.
-
-CPM is your shortest path from idea to deployment, with minimal friction and maximum clarity.
+**Cursor Project Master** takes your structured documents and magically transforms them into fully built, tested, and deployed applications. All you need is a clear Product Requirements Document (PRD).
 
 ---
 
-## Quick Start (from zero to deployed)
+## Why CPM?
 
-### Step 1: Clone the Repository
+* **📝 Just your docs:** Clearly describe your idea in Markdown—CPM takes care of the rest.
+* **🤖 Zero hassle:** Automatic code generation, testing, and deployment.
+* **🚀 Instant launch:** Move swiftly from idea to deployed product, iterate effortlessly.
+
+---
+
+## How CPM Works
+
+Cursor Project Master uses your structured Markdown documents to handle every phase:
+
+* **Document-Driven:** PRD, Technical Specs, Data Maps, UX Flows, and Style Guides drive development.
+* **Transparent:** Every step, decision, and task is openly tracked and editable.
+* **Smart & Adaptable:** Built-in self-improvement, prompt refinement, and automatic error recovery.
+
+---
+
+## ⚡ Quick Start
+
+### 1. Clone the Repo
+
 ```bash
-git clone https://github.com/your-name/cursor-project-master my-app
+git clone https://github.com/heyzgj/cursor-project-master my-app
 cd my-app
 ```
 
-### Step 2: Write Your Docs
+### 2. Write Your Docs
 
-Fill in the provided templates located at `docs/_templates/`. Clearly define your product:
+Fill in the templates located in `docs/_templates/`:
 
-* `PRD.md`: Product vision, features, acceptance criteria
-* `TECH_SPEC.md`: Technical overview, frameworks, APIs, deployment preferences
-* `DATA_MAP.md`: Your data structure clearly described
-* `UX_FLOW.md`: User journeys and interactions
-* `STYLE_GUIDE.md`: UI elements and visual styling rules
+* `PRD.md` – Product vision & requirements
+* `TECH_SPEC.md` – Technical stack & deployment preferences
+* `DATA_MAP.md` – Define your data clearly
+* `UX_FLOW.md` – User interactions step-by-step
+* `STYLE_GUIDE.md` – Visual and UI elements
 
-**Tip**: Use ChatGPT or Gemini to assist:
+**Tip:** Use ChatGPT or Gemini as assistants for clarity:
 
-```
+```markdown
 Act as a world-class product manager and a principal software architect. Your task is to help me create the initial documentation blueprint for a new software project. You must be rigorous, structured, and ask clarifying questions if my idea is ambiguous.
 
 ## CONTEXT
@@ -54,17 +60,17 @@ You will be generating the content for a set of specific Markdown templates that
 Based on my idea, generate the content for the following files(PRD/TECH SPECH/...). For each file, present the content inside a Markdown code block.
 ```
 
-Save these completed documents in the `/docs` directory.
+Place completed docs in `/docs`.
 
-### Step 3: Let the Agent Work
+### 3. Let CPM Do Its Magic
 
-Open your repo in **Cursor**, switch to **Agent → Auto-run**, and type:
+Open your project in **Cursor**, activate **Agent → Auto-run**, and type:
 
-```
+```bash
 init
 ```
 
-### Step 4: Set Deployment Secrets (one-time)
+### 4. Configure Deployment (One-time)
 
 ```bash
 npx vercel login
@@ -72,69 +78,66 @@ npx vercel link
 npx vercel env pull
 ```
 
-*(For other hosts like Render or Fly.io, follow their environment setup.)*
+*(Or follow setup steps for your chosen host.)*
 
-### Step 5: Watch Progress
+### 5. Watch Progress
 
-* Tasks automatically move through stages (`todo`, `in_progress`, `done`).
-* Real-time status updates appear in `project/project_status.md`.
-* Every validated commit auto-deploys a preview. Merging into `main` deploys production instantly.
+* Tasks auto-update through stages (`todo`, `in_progress`, `done`).
+* Track live updates in `project/project_status.md`.
+* Auto-deploy preview on every commit; production deployment by merging into `main`.
 
 ---
 
-## Adding New Features (One-Minute Tutorial)
+## Adding Features (Under 1 Minute!)
 
-### Step 1: Edit Your PRD
-
-In `docs/PRD.md`, add your feature clearly:
+**Edit your PRD:**
 
 ```markdown
-## New Feature — Image Upload
-Users can attach images (JPEG/PNG ≤ 5MB). Store them on Supabase Storage; preview within editor.
+## New Feature: Image Upload
+Allow users to upload images (JPEG/PNG ≤ 5MB). Store on Supabase Storage.
 ```
 
-### Step 2: Inform the Agent
-
-In the Cursor chat window, simply say:
+Then just inform CPM:
 
 ```
 Add the "Image Upload" feature from PRD.md.
 ```
 
-The agent automatically updates specs, plans tasks, writes code, runs tests, and deploys.
+CPM takes care of updating, implementing, testing, and deploying automatically.
 
 ---
 
-## Directory Structure
+## Project Structure
 
 ```
-.cursor/rules/              Agent’s operating guidelines
-docs/                       Product and tech specs, clearly structured
+.cursor/rules/                 # CPM guidelines
+docs/                          # Product & technical specs
 project/
-  _templates/               Task & epic templates
-  tasks/                    Kanban-style task management (todo/in_progress/done)
-  TROUBLESHOOTING_LOG.md    Agent’s reflections and improvements
-  project_status.md         Real-time progress overview
-scripts/                    Reporting and prompt evolution utilities
-.github/workflows/          CI/CD and event-driven evolution automation
-src/                        Auto-generated project code
+  _templates/                  # Task & epic templates
+  tasks/                       # Kanban-style management
+  TROUBLESHOOTING_LOG.md       # Agent reflections
+  project_status.md            # Real-time updates
+scripts/                       # Utilities for reporting
+.github/workflows/             # CI/CD automation
+src/                           # Auto-generated code
 ```
 
 ---
 
-## FAQs
+## FAQ
 
-| Question                                       | Answer                                                                                                                                            |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Am I locked into a specific stack?**         | No. Simply edit your stack preference in `TECH_SPEC.md` (Next.js, SvelteKit, FastAPI, etc.). CPM adapts automatically.                            |
-| **Can I manually intervene?**                  | Absolutely. Your edits become the new ground truth. CPM respects your changes and continues smoothly.                                             |
-| **Where does CPM store "memory"?**             | Everything stays in clear, local files (`AGENT.md`, `TROUBLESHOOTING_LOG.md`, `DECISION_LOG.md`). No hidden memory unless explicitly enabled.     |
-| **What happens when tests keep failing?**      | CPM reflects, revises plans after 3 failures, and attempts a competitive patch after 5. Edit or remove tasks freely.                              |
-| **How is prompt evolution triggered?**         | Automatically when troubleshooting logs change significantly, or manually via the GitHub Actions workflow. CPM suggests improvements through PRs. |
-| **How should I respond if CPM has questions?** | Reply in plain English. CPM updates specs, adjusts plans, and resumes immediately.                                                                |
+| Question                        | Answer                                                    |
+| ------------------------------- | --------------------------------------------------------- |
+| Am I stuck with one tech stack? | No. Edit `TECH_SPEC.md` and CPM adapts seamlessly.        |
+| Can I manually edit the code?   | Yes! Your changes become the new baseline instantly.      |
+| How does CPM store "memory"?    | Clearly in local text files. Nothing hidden.              |
+| What if tests fail repeatedly?  | CPM reflects, revises plans, retries intelligently.       |
+| How does CPM evolve prompts?    | Automatically or via GitHub Actions—improving constantly. |
 
 ---
 
-## License & Contributing
+## Contribute & License
 
-MIT License — Fork, build, innovate freely. Contributions via PRs are welcome and encouraged.
+MIT License – Fork, build, innovate!
+
+**Contributions welcome!** PRs are encouraged—let's build together.
