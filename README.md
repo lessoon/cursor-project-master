@@ -1,14 +1,17 @@
 # Cursor Project Master (CPM)
 
-**Turn PRD into fully deployed apps.**
+**From concept to launch, just write a PRD—and let Cursor do the rest.**
 
-No coding. Just structured documents and an autonomous AI that builds, tests, and deploys your app.
+Forget coding, skip the boilerplate.
+Write down what your app should do, and CPM handles the build, testing, and deployment automatically.
 
----
+* 📝 Jot down your idea clearly
+* 🤖 Cursor takes it from there
+* 🚀 Launch right away, tweak whenever
 
 ## What is CPM?
 
-Cursor Project Master transforms a simple product description into a complete, production-ready web application. Describe your idea once, clearly, in Markdown. CPM handles everything else:
+Cursor Project Master transforms a simple product description into a complete, production-ready application. Describe your idea once, clearly, in Markdown. CPM handles everything else:
 
 - **Document-driven:** A single Markdown-based Product Requirement Document (PRD) and Technical Specification guide the entire development cycle.
 - **Transparent workflow:** Tasks, plans, and decisions are neatly tracked in simple text files—completely visible and editable.
