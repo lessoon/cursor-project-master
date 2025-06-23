@@ -34,41 +34,68 @@ export function parseMarkdown(markdown: string): string {
       '<a href="$2" class="text-blue-400 hover:text-blue-300 underline transition-colors" target="_blank" rel="noopener noreferrer">$1</a>'
     )
 
-    // Tables (basic support)
-    .replace(/\|(.+)\|/g, (match, content) => {
-      const cells = content.split('|').map((cell: string) => cell.trim())
-      const cellsHtml = cells.map((cell: string) => `<td class="px-3 py-2 border border-white/10 text-white/80">${cell}</td>`).join('')
-      return `<tr>${cellsHtml}</tr>`
-    })
-
-  // Process lists (improved handling)
+  // Process content line by line for better control
   const lines = html.split('\n')
   let processedLines: string[] = []
   let inList = false
   let listItems: string[] = []
+  let inTable = false
+  let tableRows: string[] = []
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     const isListItem = /^[\s]*[*-]\s+(.*)$/.test(line)
+    const isTableRow = /^\|(.+)\|$/.test(line)
+    const isTableSeparator = /^\|[\s-:|]+\|$/.test(line)
     
-    if (isListItem) {
-      if (!inList) {
-        inList = true
-        listItems = []
+    if (isTableRow && !isTableSeparator) {
+      if (!inTable) {
+        inTable = true
+        tableRows = []
       }
-      const match = line.match(/^[\s]*[*-]\s+(.*)$/)
-      if (match) {
-        listItems.push(`<li class="text-white/80 mb-1 ml-4">${match[1]}</li>`)
-      }
+      // Process table row
+      const content = line.replace(/^\||\|$/g, '')
+      const cells = content.split('|').map((cell: string) => cell.trim())
+      const cellsHtml = cells.map((cell: string) => 
+        `<td class="px-3 py-2 border border-white/10 text-white/80">${cell}</td>`
+      ).join('')
+      tableRows.push(`<tr>${cellsHtml}</tr>`)
+    } else if (isTableSeparator) {
+      // Skip table separator lines
+      continue
     } else {
-      if (inList) {
-        // End of list, process accumulated items
-        processedLines.push(`<ul class="list-disc list-outside space-y-1 mb-4 ml-4">${listItems.join('')}</ul>`)
-        listItems = []
-        inList = false
+      // End table if we were in one
+      if (inTable) {
+        processedLines.push(`<table class="w-full border-collapse border border-white/10 my-4 rounded-lg overflow-hidden"><tbody>${tableRows.join('')}</tbody></table>`)
+        tableRows = []
+        inTable = false
       }
-      processedLines.push(line)
+
+      // Handle lists
+      if (isListItem) {
+        if (!inList) {
+          inList = true
+          listItems = []
+        }
+        const match = line.match(/^[\s]*[*-]\s+(.*)$/)
+        if (match) {
+          listItems.push(`<li class="text-white/80 mb-1 ml-4">${match[1]}</li>`)
+        }
+      } else {
+        if (inList) {
+          // End of list, process accumulated items
+          processedLines.push(`<ul class="list-disc list-outside space-y-1 mb-4 ml-4">${listItems.join('')}</ul>`)
+          listItems = []
+          inList = false
+        }
+        processedLines.push(line)
+      }
     }
+  }
+
+  // Handle case where document ends with a table
+  if (inTable) {
+    processedLines.push(`<table class="w-full border-collapse border border-white/10 my-4 rounded-lg overflow-hidden"><tbody>${tableRows.join('')}</tbody></table>`)
   }
 
   // Handle case where document ends with a list
@@ -82,9 +109,6 @@ export function parseMarkdown(markdown: string): string {
   html = html
     .replace(/\n\n+/g, '</p><p class="text-white/80 leading-relaxed mb-4">')
     .replace(/\n/g, '<br>')
-
-  // Wrap tables
-  html = html.replace(/(<tr>[\s\S]*?<\/tr>)/g, '<table class="w-full border-collapse border border-white/10 my-4 rounded-lg overflow-hidden">$1</table>')
 
   // Wrap remaining content in paragraphs (improved logic)
   const lines2 = html.split('\n')
