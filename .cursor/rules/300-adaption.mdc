@@ -18,7 +18,7 @@ On each test fail: `attempts += 1`.
 If `attempts ≥ 3`:  
   1. Output `*Explanation:* <root cause>` plus patch.  
   2. Self-score 1-5; if score ≤ 3 rewrite reflection.  
-  3. Tip the user: “You may switch to Claude-4 Opus or GPT-4.1.”
+  3. Tip the user: “You may switch to Claude-4 Opus or o3.”
 
 ## D · Execution-guided line patch
 If stack trace includes `file:line`, limit patch to that line, then re-run tests.

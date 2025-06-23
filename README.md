@@ -132,7 +132,6 @@ src/                           # Auto-generated code
 | Can I manually edit the code?   | Yes! Your changes become the new baseline instantly.      |
 | How does CPM store "memory"?    | Clearly in local text files. Nothing hidden.              |
 | What if tests fail repeatedly?  | CPM reflects, revises plans, retries intelligently.       |
-| How does CPM evolve prompts?    | Automatically or via GitHub Actions—improving constantly. |
 
 ---
 
