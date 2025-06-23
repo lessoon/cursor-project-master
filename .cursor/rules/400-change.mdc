@@ -4,13 +4,18 @@ globs:
 alwaysApply: true
 ---
 ---
+description: 
+globs: 
+alwaysApply: true
+---
+---
 description: Pause → update docs + ADR → re-plan → resume; optional memory sync.
 ---
 
-1. Acknowledge change; move active task back to `/todo/`.  
-2. Update PRD/TECH_SPEC; append ADR.  
-3. Invoke `100-engine` to diff plan; move obsolete tasks to `/tasks/obsolete/`.  
-4. {% if env.EXTERNAL_MEMORY %}
-   <call memory.write file="docs/DECISION_LOG.md" namespace="cursor-pm"/>
-   {% endif %}
-5. Summarise changes; resume with highest-priority task.
+1. Acknowledge change; move the active task back to `/project/tasks/todo/`.  
+2. Update the PRD/TECH_SPEC as needed; append an ADR for the change.  
+3. Invoke `100-engine` to re-plan (diff updated requirements vs current plan) and create new tasks with unique IDs; move obsolete tasks to `/tasks/obsolete/`.  
+4. {% if env.EXTERNAL_MEMORY %}  
+   <call memory.write file="docs/DECISION_LOG.md" namespace="cursor-pm"/>  
+   {% endif %}  
+5. Summarise changes; resume with the highest-priority task.
