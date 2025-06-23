@@ -4,6 +4,11 @@ globs:
 alwaysApply: true
 ---
 ---
+description: 
+globs: 
+alwaysApply: true
+---
+---
 description: Contract-first · TDD · no hard-coding · CI green · lint/security · event-based coverage regeneration.
 ---
 
@@ -20,16 +25,19 @@ description: Contract-first · TDD · no hard-coding · CI green · lint/securit
    environment variables.
 
 4. **Definition of done**  
-   A task / Epic is “done” only when all tests, lint, audit, and deploy steps
+   A task/Epic is “done” only when all tests, lint, audit, and deploy steps
    in CI are green.
 
 5. **Lint & security gates**  
-   `eslint --max-warnings=0`, `prettier --check .`,  
-   `npm audit --production` → zero *High* or *Critical* vulnerabilities.
+   Ensure `eslint --max-warnings=0`, `prettier --check .` all pass.  
+   Run `npm audit --production` and resolve any *High* or *Critical* vulnerabilities.
 
 6. **Coverage gate & auto-regen**  
-   *Line coverage must stay ≥ 70 %.*  
-   If coverage drops below threshold **or** any file inside `/docs/schemas/`
+   *Line coverage must stay ≥ 70%.*  
+   If coverage drops below threshold **or** any file inside `/docs/schemas/`  
    changes **or** the engine archives an Epic:  
-   > “Create a new ‘regen-tests’ task that instructs the agent to generate
-   > fresh LLM-based tests, then re-run CI until coverage ≥ 70 % again.”
+   > “Create a new ‘regen-tests’ task that instructs the agent to generate  
+   > fresh LLM-based tests, then re-run CI until coverage ≥ 70% again.”
+
+7. **UI/UX compliance**  
+   All user-facing components must strictly follow `docs/STYLE_GUIDE.md`. For any new or complex UI, first draft the layout or prototype and verify it against the style guide to avoid redesign later.

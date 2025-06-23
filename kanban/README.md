@@ -83,10 +83,14 @@ project/
 - Structured task creation with checklists
 
 **📄 lib/markdown-utils.ts**
-- Markdown to HTML conversion
-- Syntax highlighting for code blocks
-- Title extraction from content
-- Optimized for document viewing
+- Enhanced markdown to HTML conversion with comprehensive feature support
+- Advanced syntax highlighting for code blocks with language detection
+- Table rendering with responsive design and dark theme styling
+- Robust link parsing with proper URL handling (fixed regex bug)
+- XSS protection through HTML escaping
+- Smart list processing with proper nesting and indentation
+- Title extraction from content with fallback handling
+- Optimized for document viewing with performance considerations
 
 **📄 app/page.tsx**
 - This is the main page users see
@@ -198,15 +202,23 @@ interface KanbanCardProps {
 - **Visual Feedback**: Status indicators and error messages
 - **Help Documentation**: Setup instructions for users
 
-### 5. DocumentViewerModal Component (New)
+### 5. DocumentViewerModal Component (Enhanced)
 
-**Purpose:** Rich markdown document viewing experience.
+**Purpose:** Rich markdown document viewing experience with advanced rendering capabilities.
 
 **Features:**
-- **Markdown Rendering**: Full markdown support with syntax highlighting
+- **Enhanced Markdown Rendering**: Complete markdown support with improved parsing
+  - Headers (H1-H4) with proper hierarchy
+  - Tables with borders and responsive design
+  - Code blocks with syntax highlighting and proper escaping
+  - Inline code with distinct styling
+  - Links with hover effects and external link handling
+  - Lists (bulleted and numbered) with proper nesting
+  - Horizontal rules and text formatting (bold, italic)
+  - XSS protection with HTML escaping
 - **Download Function**: Export documents as .md files
 - **External Links**: Open original document sources
-- **Responsive Design**: Optimized for all screen sizes
+- **Responsive Design**: Optimized for all screen sizes with dark theme support
 
 ### 6. AddResourceModal Component (New)
 
@@ -299,21 +311,43 @@ interface Resource {
 }
 \`\`\`
 
-### Markdown Processing
+### Enhanced Markdown Processing
 
 **Features Supported:**
-- Headers (H1, H2, H3)
-- Bold and italic text
-- Code blocks with syntax highlighting
-- Inline code snippets
-- Links (internal and external)
-- Lists (bulleted and numbered)
-- Proper paragraph spacing
+- **Headers**: H1, H2, H3, H4 with proper hierarchy and spacing
+- **Text Formatting**: Bold and italic text with proper styling
+- **Code**: 
+  - Multi-line code blocks with language detection and syntax highlighting
+  - Inline code snippets with distinct background and styling
+  - Proper escaping to prevent XSS attacks
+- **Links**: Internal and external links with hover effects and transition animations
+- **Lists**: 
+  - Bulleted and numbered lists with proper nesting
+  - Improved spacing and indentation
+  - Support for mixed list types
+- **Tables**: 
+  - Full table support with borders and responsive design
+  - Header and data cell styling
+  - Dark theme compatible colors
+- **Layout Elements**:
+  - Horizontal rules for section separation
+  - Proper paragraph spacing and line breaks
+  - Responsive design for all screen sizes
 
-**Rendering Pipeline:**
-1. **Parse**: Convert markdown to HTML with custom rules
-2. **Style**: Apply Tailwind classes for consistent theming
-3. **Display**: Render in modal with scroll and responsive design
+**Enhanced Rendering Pipeline:**
+1. **Security**: HTML escaping to prevent XSS attacks
+2. **Parse**: Convert markdown to HTML with enhanced regex patterns
+3. **Structure**: Process complex elements like tables and nested lists
+4. **Style**: Apply comprehensive Tailwind classes for dark theme consistency
+5. **Display**: Render in modal with optimized scroll and responsive design
+
+**Recent Improvements:**
+- ✅ Fixed link parsing (corrected regex pattern bug)
+- ✅ Added table support with proper styling
+- ✅ Enhanced list processing with better nesting
+- ✅ Improved code block handling with language detection
+- ✅ Added XSS protection with HTML escaping
+- ✅ Better paragraph and line break handling
 
 ### File Upload System
 
@@ -392,6 +426,115 @@ interface Resource {
 - **Transitioning**: Shimmer overlay
 - **Completed**: Green pulse effect
 - **Working**: Subtle glow animation
+
+---
+
+## 🔧 Technical Deep Dive: Markdown Rendering System
+
+### Problem Statement
+The original markdown rendering system had several limitations:
+- **Link parsing bug**: Regex pattern used `$$` instead of `()` for URL capture
+- **Limited table support**: No table rendering capability
+- **Basic list handling**: Poor nested list processing
+- **Security concerns**: No XSS protection
+- **Inconsistent styling**: Limited dark theme support
+
+### Solution Architecture
+
+**Enhanced parseMarkdown() Function:**
+```typescript
+// Security-first approach with HTML escaping
+export function parseMarkdown(markdown: string): string {
+  let html = markdown
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    
+    // Headers with proper hierarchy
+    .replace(/^#### (.*$)/gim, '<h4 class="text-base font-semibold text-white mb-2 mt-3">$1</h4>')
+    .replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold text-white mb-2 mt-4">$1</h3>')
+    
+    // Fixed link parsing - corrected regex pattern
+    .replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,  // Fixed: was using $$
+      '<a href="$2" class="text-blue-400 hover:text-blue-300 underline transition-colors">$1</a>'
+    )
+    
+    // Enhanced table support
+    .replace(/\|(.+)\|/g, (match, content) => {
+      const cells = content.split('|').map(cell => cell.trim())
+      const cellsHtml = cells.map(cell => 
+        `<td class="px-3 py-2 border border-white/10 text-white/80">${cell}</td>`
+      ).join('')
+      return `<tr>${cellsHtml}</tr>`
+    })
+    
+  // Smart list processing with proper nesting...
+}
+```
+
+### Key Improvements
+
+**1. Link Parsing Fix**
+```typescript
+// Before (broken):
+.replace(/\[([^\]]+)\]$$([^)]+)$$/g, ...)
+
+// After (working):
+.replace(/\[([^\]]+)\]\(([^)]+)\)/g, ...)
+```
+
+**2. Table Support**
+- Automatic table detection and rendering
+- Responsive design with proper borders
+- Dark theme compatible styling
+- Overflow handling for mobile devices
+
+**3. Enhanced List Processing**
+- Line-by-line processing for better control
+- Proper nesting support for sub-lists
+- Consistent indentation and spacing
+- Support for mixed list types (* and -)
+
+**4. Security Enhancements**
+- HTML escaping to prevent XSS attacks
+- Safe content handling
+- Validated input processing
+
+### Usage Examples
+
+**Basic Usage:**
+```typescript
+import { parseMarkdown, extractTitle } from '@/lib/markdown-utils'
+
+const content = `# My Document
+This is **bold** text with a [link](https://example.com).
+
+| Column 1 | Column 2 |
+|----------|----------|
+| Data 1   | Data 2   |
+`
+
+const htmlContent = parseMarkdown(content)
+const title = extractTitle(content, 'fallback-title')
+```
+
+**In Components:**
+```typescript
+// DocumentViewerModal.tsx
+const htmlContent = parseMarkdown(resource.content)
+
+<div 
+  className="markdown-content prose prose-invert max-w-none..."
+  dangerouslySetInnerHTML={{ __html: htmlContent }} 
+/>
+```
+
+### Performance Considerations
+- Efficient regex processing
+- Minimal DOM manipulations
+- Cached rendering where possible
+- Optimized for large documents
 
 ---
 

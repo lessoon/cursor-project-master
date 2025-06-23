@@ -97,8 +97,29 @@ export function DocumentViewerModal({ isOpen, onClose, resource }: DocumentViewe
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
-          <div className="max-w-none prose prose-invert">
-            <div className="markdown-content" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+          <div className="max-w-none">
+            <div 
+              className="markdown-content prose prose-invert max-w-none
+                         [&>h1]:text-2xl [&>h1]:font-bold [&>h1]:text-white [&>h1]:mb-4 [&>h1]:mt-8
+                         [&>h2]:text-xl [&>h2]:font-semibold [&>h2]:text-white [&>h2]:mb-3 [&>h2]:mt-6
+                         [&>h3]:text-lg [&>h3]:font-semibold [&>h3]:text-white [&>h3]:mb-2 [&>h3]:mt-4
+                         [&>h4]:text-base [&>h4]:font-semibold [&>h4]:text-white [&>h4]:mb-2 [&>h4]:mt-3
+                         [&>p]:text-white/80 [&>p]:leading-relaxed [&>p]:mb-4
+                         [&>ul]:list-disc [&>ul]:ml-6 [&>ul]:mb-4 [&>ul]:space-y-1
+                         [&>ul>li]:text-white/80
+                         [&>ol]:list-decimal [&>ol]:ml-6 [&>ol]:mb-4 [&>ol]:space-y-1
+                         [&>ol>li]:text-white/80
+                         [&>pre]:bg-black/40 [&>pre]:rounded-lg [&>pre]:p-4 [&>pre]:my-4 [&>pre]:overflow-x-auto [&>pre]:border [&>pre]:border-white/10
+                         [&>pre>code]:text-green-300 [&>pre>code]:text-sm [&>pre>code]:font-mono
+                         [&>code]:bg-white/10 [&>code]:px-2 [&>code]:py-1 [&>code]:rounded [&>code]:text-sm [&>code]:font-mono [&>code]:text-blue-300
+                         [&>table]:w-full [&>table]:border-collapse [&>table]:border [&>table]:border-white/10 [&>table]:my-4 [&>table]:rounded-lg [&>table]:overflow-hidden
+                         [&>table>tr>td]:px-3 [&>table>tr>td]:py-2 [&>table>tr>td]:border [&>table>tr>td]:border-white/10 [&>table>tr>td]:text-white/80
+                         [&>hr]:border-white/20 [&>hr]:my-6
+                         [&>a]:text-blue-400 [&>a]:hover:text-blue-300 [&>a]:underline [&>a]:transition-colors
+                         [&>strong]:font-semibold [&>strong]:text-white
+                         [&>em]:italic [&>em]:text-white/90"
+              dangerouslySetInnerHTML={{ __html: htmlContent }} 
+            />
           </div>
         </div>
 

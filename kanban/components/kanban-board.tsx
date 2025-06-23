@@ -11,11 +11,15 @@ import {
   useSensor,
   useSensors,
   closestCorners,
+  type CollisionDetection,
+  rectIntersection,
+  pointerWithin,
 } from "@dnd-kit/core"
 import { arrayMove } from "@dnd-kit/sortable"
-import type { CPMTask, CPMBoard } from "@/types/cmp"
-import { parseCPMTasks } from "@/lib/parse-cmp-tasks"
-import { aiAutomation, type TaskUpdate } from "@/lib/ai-automation"
+import type { CPMTask, CPMBoard, CPMColumn } from "@/types/cmp"
+import { taskApi } from "@/lib/api-client"
+// Future: AI automation imports (disabled for now)
+// import { aiAutomation, type TaskUpdate } from "@/lib/ai-automation"
 import { KanbanColumn } from "./kanban-column"
 import { KanbanCard } from "./kanban-card"
 import { CardModal } from "./card-modal"
@@ -25,7 +29,7 @@ import { Navbar } from "./navbar"
 import { ContextPack } from "./context-pack"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Activity, Clock, Play, Pause, Sparkles } from "lucide-react"
+import { Activity, Clock } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface KanbanBoardProps {
@@ -42,11 +46,11 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
   const [isContextPackOpen, setIsContextPackOpen] = useState(false)
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
 
-  // AI Automation State
-  const [isAIActive, setIsAIActive] = useState(true)
-  const [aiWorkingTasks, setAIWorkingTasks] = useState<Set<string>>(new Set())
-  const [taskActivities, setTaskActivities] = useState<Record<string, string>>({})
-  const [transitioningTasks, setTransitioningTasks] = useState<Set<string>>(new Set())
+  // Future: AI Automation State (disabled for now)
+  // const [isAIActive, setIsAIActive] = useState(false)
+  // const [aiWorkingTasks, setAIWorkingTasks] = useState<Set<string>>(new Set())
+  // const [taskActivities, setTaskActivities] = useState<Record<string, string>>({})
+  // const [transitioningTasks, setTransitioningTasks] = useState<Set<string>>(new Set())
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -56,26 +60,65 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
     }),
   )
 
+  // Custom collision detection - prioritize column droppables over task sortables
+  const customCollisionDetection: CollisionDetection = (args) => {
+    const { active, droppableContainers } = args
+    
+    // First, check for column droppables (inbox, next-up, running, done)
+    const columnIds = ['inbox', 'next-up', 'running', 'done']
+    const columnDroppables = droppableContainers.filter(container => 
+      columnIds.includes(container.id as string)
+    )
+    
+    // Use pointerWithin for columns to get accurate hit detection
+    const columnCollisions = pointerWithin({
+      ...args,
+      droppableContainers: columnDroppables
+    })
+    
+    if (columnCollisions.length > 0) {
+      return columnCollisions
+    }
+    
+    // Fallback to task sortables if no column intersection
+    const taskDroppables = droppableContainers.filter(container => 
+      !columnIds.includes(container.id as string)
+    )
+    
+    const taskCollisions = closestCorners({
+      ...args,
+      droppableContainers: taskDroppables
+    })
+    
+    return taskCollisions
+  }
+
   useEffect(() => {
-    parseCPMTasks().then(setBoard)
+    taskApi.fetchTasks().then(setBoard).catch(console.error)
+    
+    // Set up periodic refresh to keep UI in sync with file changes
+    const refreshInterval = setInterval(() => {
+      taskApi.fetchTasks().then(setBoard).catch(console.error)
+    }, 3000) // Refresh every 3 seconds
+    
+    return () => clearInterval(refreshInterval)
   }, [])
 
-  // AI Automation Effect
-  useEffect(() => {
-    if (!isAIActive) return
+  // Future: AI Automation Effect (disabled for now)
+  // useEffect(() => {
+  //   if (!isAIActive) return
+  //   const unsubscribe = aiAutomation.subscribe((update: TaskUpdate) => {
+  //     handleAIUpdate(update)
+  //   })
+  //   aiAutomation.start()
+  //   return () => {
+  //     unsubscribe()
+  //     aiAutomation.stop()
+  //   }
+  // }, [isAIActive])
 
-    const unsubscribe = aiAutomation.subscribe((update: TaskUpdate) => {
-      handleAIUpdate(update)
-    })
-
-    aiAutomation.start()
-
-    return () => {
-      unsubscribe()
-      aiAutomation.stop()
-    }
-  }, [isAIActive])
-
+  // Future: AI Automation handlers (disabled for now)
+  /*
   const handleAIUpdate = (update: TaskUpdate) => {
     const { taskId, type, data } = update
 
@@ -91,150 +134,22 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
         break
     }
   }
+  */
 
+  // Future: AI Automation handler functions (disabled for now)
+  /*
   const handleAIChecklistUpdate = (taskId: string, itemIndex: number) => {
-    setAIWorkingTasks((prev) => new Set(prev).add(taskId))
-    setTaskActivities((prev) => ({ ...prev, [taskId]: "Completing checklist item..." }))
-
-    setTimeout(
-      () => {
-        setBoard((prev) => {
-          if (!prev) return prev
-
-          const newColumns = prev.columns.map((column) => ({
-            ...column,
-            tasks: column.tasks.map((task) => {
-              if (task.id === taskId && task.checklist[itemIndex] && !task.checklist[itemIndex].completed) {
-                const newChecklist = [...task.checklist]
-                newChecklist[itemIndex] = { ...newChecklist[itemIndex], completed: true }
-                const completedCount = newChecklist.filter((item) => item.completed).length
-                const progress = (completedCount / newChecklist.length) * 100
-
-                return {
-                  ...task,
-                  checklist: newChecklist,
-                  progress,
-                  updatedAt: new Date(),
-                }
-              }
-              return task
-            }),
-          }))
-
-          return { ...prev, columns: newColumns }
-        })
-
-        setAIWorkingTasks((prev) => {
-          const newSet = new Set(prev)
-          newSet.delete(taskId)
-          return newSet
-        })
-
-        setTaskActivities((prev) => {
-          const newActivities = { ...prev }
-          delete newActivities[taskId]
-          return newActivities
-        })
-      },
-      1500 + Math.random() * 1000,
-    ) // 1.5-2.5 seconds
+    // Implementation commented out for future development
   }
 
   const handleAIStatusUpdate = (taskId: string, fromStatus: string, toStatus: string, reason: string) => {
-    setTransitioningTasks((prev) => new Set(prev).add(taskId))
-    setTaskActivities((prev) => ({ ...prev, [taskId]: reason }))
-
-    setTimeout(() => {
-      setBoard((prev) => {
-        if (!prev) return prev
-
-        const newColumns = [...prev.columns]
-        const fromColumnIndex = newColumns.findIndex((col) => col.id === fromStatus)
-        const toColumnIndex = newColumns.findIndex((col) => col.id === toStatus)
-
-        if (fromColumnIndex === -1 || toColumnIndex === -1) return prev
-
-        const taskIndex = newColumns[fromColumnIndex].tasks.findIndex((task) => task.id === taskId)
-        if (taskIndex === -1) return prev
-
-        const task = newColumns[fromColumnIndex].tasks[taskIndex]
-        const updatedTask = {
-          ...task,
-          status: toStatus as CPMTask["status"],
-          updatedAt: new Date(),
-        }
-
-        // Remove from source column
-        newColumns[fromColumnIndex] = {
-          ...newColumns[fromColumnIndex],
-          tasks: newColumns[fromColumnIndex].tasks.filter((t) => t.id !== taskId),
-        }
-
-        // Add to destination column
-        newColumns[toColumnIndex] = {
-          ...newColumns[toColumnIndex],
-          tasks: [...newColumns[toColumnIndex].tasks, updatedTask],
-        }
-
-        return { ...prev, columns: newColumns }
-      })
-
-      setTransitioningTasks((prev) => {
-        const newSet = new Set(prev)
-        newSet.delete(taskId)
-        return newSet
-      })
-
-      setTimeout(() => {
-        setTaskActivities((prev) => {
-          const newActivities = { ...prev }
-          delete newActivities[taskId]
-          return newActivities
-        })
-      }, 2000)
-    }, 800) // Transition delay
+    // Implementation commented out for future development
   }
 
   const handleAIProgressUpdate = (taskId: string, activity: string, progressIncrease: number) => {
-    setAIWorkingTasks((prev) => new Set(prev).add(taskId))
-    setTaskActivities((prev) => ({ ...prev, [taskId]: activity }))
-
-    setTimeout(() => {
-      setBoard((prev) => {
-        if (!prev) return prev
-
-        const newColumns = prev.columns.map((column) => ({
-          ...column,
-          tasks: column.tasks.map((task) => {
-            if (task.id === taskId) {
-              return {
-                ...task,
-                progress: Math.min(task.progress + progressIncrease, 100),
-                updatedAt: new Date(),
-              }
-            }
-            return task
-          }),
-        }))
-
-        return { ...prev, columns: newColumns }
-      })
-
-      setAIWorkingTasks((prev) => {
-        const newSet = new Set(prev)
-        newSet.delete(taskId)
-        return newSet
-      })
-
-      setTimeout(() => {
-        setTaskActivities((prev) => {
-          const newActivities = { ...prev }
-          delete newActivities[taskId]
-          return newActivities
-        })
-      }, 2000)
-    }, 2000)
+    // Implementation commented out for future development
   }
+  */
 
   const tasksById = useMemo(() => {
     if (!board) return {}
@@ -270,55 +185,19 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
     const { active, over } = event
     if (!over || !board) return
 
-    const activeId = active.id as string
     const overId = over.id as string
 
-    // Check if dragging over a column
+    // Only update visual drag over state, don't move tasks during drag
     const overColumn = board.columns.find((col) => col.id === overId)
     if (overColumn) {
       setDragOverColumn(overId)
+    } else {
+      // Check if dragging over a task and set the column highlight
+      const targetColumn = board.columns.find((col) => col.tasks.some((task) => task.id === overId))
+      if (targetColumn) {
+        setDragOverColumn(targetColumn.id)
+      }
     }
-
-    // Find the columns
-    const activeColumn = board.columns.find((col) => col.tasks.some((task) => task.id === activeId))
-    const targetColumn = board.columns.find((col) => col.id === overId || col.tasks.some((task) => task.id === overId))
-
-    if (!activeColumn || !targetColumn) return
-    if (activeColumn.id === targetColumn.id) return
-
-    setBoard((prev) => {
-      if (!prev) return prev
-
-      const newColumns = [...prev.columns]
-      const activeColIndex = newColumns.findIndex((col) => col.id === activeColumn.id)
-      const targetColIndex = newColumns.findIndex((col) => col.id === targetColumn.id)
-
-      // Remove task from active column
-      const activeTask = newColumns[activeColIndex].tasks.find((task) => task.id === activeId)
-      if (!activeTask) return prev
-
-      newColumns[activeColIndex] = {
-        ...newColumns[activeColIndex],
-        tasks: newColumns[activeColIndex].tasks.filter((task) => task.id !== activeId),
-      }
-
-      // Add task to target column
-      const updatedTask = {
-        ...activeTask,
-        status: targetColumn.id,
-        updatedAt: new Date(),
-      }
-
-      newColumns[targetColIndex] = {
-        ...newColumns[targetColIndex],
-        tasks: [...newColumns[targetColIndex].tasks, updatedTask],
-      }
-
-      return {
-        ...prev,
-        columns: newColumns,
-      }
-    })
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -326,21 +205,47 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
     setActiveTask(null)
     setDragOverColumn(null)
 
-    if (!over || !board) return
+    if (!over || !board) {
+      return
+    }
 
     const activeId = active.id as string
     const overId = over.id as string
 
     // Find the column containing the active task
     const activeColumn = board.columns.find((col) => col.tasks.some((task) => task.id === activeId))
-    if (!activeColumn) return
+    if (!activeColumn) {
+      return
+    }
 
-    // If dropping on another task in the same column, reorder
-    if (activeColumn.tasks.some((task) => task.id === overId)) {
+    // Determine target column - prioritize column IDs over task IDs
+    let targetColumn: CPMColumn | undefined
+    
+    // First check if overId is a column ID (direct drop on column)
+    targetColumn = board.columns.find((col) => col.id === overId)
+    
+    if (targetColumn) {
+      // Direct column drop
+    } else {
+      // overId is a task - find which column contains that task
+      for (const column of board.columns) {
+        if (column.tasks.some(task => task.id === overId)) {
+          targetColumn = column
+          break
+        }
+      }
+      
+      if (!targetColumn) {
+        return
+      }
+    }
+
+    // Handle same-column reordering (only if dropped on a task, not column header)
+    if (targetColumn.id === activeColumn.id && board.columns.find(col => col.id === overId) === undefined) {
       const oldIndex = activeColumn.tasks.findIndex((task) => task.id === activeId)
       const newIndex = activeColumn.tasks.findIndex((task) => task.id === overId)
 
-      if (oldIndex !== newIndex) {
+      if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
         setBoard((prev) => {
           if (!prev) return prev
 
@@ -352,20 +257,32 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
             tasks: arrayMove(newColumns[columnIndex].tasks, oldIndex, newIndex),
           }
 
-          return {
-            ...prev,
-            columns: newColumns,
-          }
+          return { ...prev, columns: newColumns }
         })
       }
+      return // Don't continue with move between columns
     }
 
-    // Fire status change callback
-    const task = tasksById[activeId]
-    if (task && onStatusChange) {
-      const targetColumn = board.columns.find((col) => col.id === overId)
-      if (targetColumn && task.status !== targetColumn.id) {
-        onStatusChange(activeId, targetColumn.id)
+    // Handle column changes - move task between columns
+    if (targetColumn && activeColumn.id !== targetColumn.id) {
+      const task = activeColumn.tasks.find((t) => t.id === activeId)
+      if (task) {
+        // Move the actual file and refresh board
+        taskApi.moveTask(task.id, task.status, targetColumn.id as CPMTask["status"])
+          .then(() => {
+            // Refresh board data to get the updated state
+            return taskApi.fetchTasks()
+          })
+          .then(setBoard)
+          .catch((error: Error) => {
+            console.error("❌ Failed to move task file:", error)
+            // TODO: Show error toast
+          })
+
+        // Fire status change callback
+        if (onStatusChange) {
+          onStatusChange(activeId, targetColumn.id as CPMTask["status"])
+        }
       }
     }
   }
@@ -376,11 +293,12 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
   }
 
   const handleCreateTask = (taskData: Omit<CPMTask, "id" | "status" | "createdAt" | "updatedAt" | "filePath">) => {
+    const taskId = `T-${Date.now()}`
     const newTask: CPMTask = {
       ...taskData,
-      id: `task-${Date.now()}`,
+      id: taskId,
       status: "inbox",
-      filePath: `/docs/generated/task-${Date.now()}.md`,
+      filePath: `project/tasks/todo/${taskId}.md`,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
@@ -403,56 +321,83 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
         columns: newColumns,
       }
     })
+
+    // Write the task file asynchronously
+    taskApi.createTask(newTask).catch((error: Error) => {
+      console.error("Failed to create task file:", error)
+      // TODO: Show error toast and remove from UI
+    })
   }
 
-  const handleToggleChecklistItem = (taskId: string, itemId: string) => {
+  const handleToggleChecklistItem = async (taskId: string, itemId: string) => {
+    // Find the task first, outside of setBoard
+    let targetTask: CPMTask | null = null
+    if (board) {
+      for (const column of board.columns) {
+        const task = column.tasks.find(t => t.id === taskId)
+        if (task) {
+          targetTask = task
+          break
+        }
+      }
+    }
+
+    if (!targetTask) {
+      console.error('🔧 ERROR: Task not found:', taskId)
+      return
+    }
+
+    // Create the updated task
+    const newChecklist = targetTask.checklist.map((item) =>
+      item.id === itemId ? { ...item, completed: !item.completed } : item,
+    )
+    const completedCount = newChecklist.filter((item) => item.completed).length
+    const progress = newChecklist.length > 0 ? (completedCount / newChecklist.length) * 100 : 0
+
+    const updatedTask: CPMTask = {
+      ...targetTask,
+      checklist: newChecklist,
+      progress,
+      updatedAt: new Date(),
+    }
+
+    // Update the UI optimistically
     setBoard((prev) => {
       if (!prev) return prev
 
       const newColumns = prev.columns.map((column) => ({
         ...column,
-        tasks: column.tasks.map((task) => {
-          if (task.id === taskId) {
-            const newChecklist = task.checklist.map((item) =>
-              item.id === itemId ? { ...item, completed: !item.completed } : item,
-            )
-            const completedCount = newChecklist.filter((item) => item.completed).length
-            const progress = newChecklist.length > 0 ? (completedCount / newChecklist.length) * 100 : 0
-
-            return {
-              ...task,
-              checklist: newChecklist,
-              progress,
-              updatedAt: new Date(),
-            }
-          }
-          return task
-        }),
+        tasks: column.tasks.map((task) =>
+          task.id === taskId ? updatedTask : task
+        ),
       }))
 
-      return {
-        ...prev,
-        columns: newColumns,
-      }
+      return { ...prev, columns: newColumns }
     })
 
     // Update selected task if it's the same one
     if (selectedTask?.id === taskId) {
-      setSelectedTask((prev) => {
-        if (!prev) return prev
-        const newChecklist = prev.checklist.map((item) =>
-          item.id === itemId ? { ...item, completed: !item.completed } : item,
-        )
-        const completedCount = newChecklist.filter((item) => item.completed).length
-        const progress = newChecklist.length > 0 ? (completedCount / newChecklist.length) * 100 : 0
+      setSelectedTask(updatedTask)
+    }
 
-        return {
-          ...prev,
-          checklist: newChecklist,
-          progress,
-          updatedAt: new Date(),
+    // Now make the API call with the guaranteed updated task
+    try {
+      await taskApi.updateTask(updatedTask)
+    } catch (error) {
+      console.error('🔧 FAILED to update task file:', error)
+      // Revert UI on error - refetch fresh data
+      try {
+        const freshBoard = await taskApi.fetchTasks()
+        setBoard(freshBoard)
+        if (selectedTask?.id === taskId) {
+          const freshTask = freshBoard?.columns
+            .flatMap(col => col.tasks)
+            .find(t => t.id === taskId)
+          setSelectedTask(freshTask || null)
         }
-      })
+      } catch (refetchError) {
+        console.error('🔧 FAILED to refetch after error:', refetchError)
+      }
     }
   }
 
@@ -481,22 +426,12 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
 
           {/* Controls and Metrics */}
           <div className="flex items-center gap-4">
-            {/* AI Toggle */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsAIActive(!isAIActive)}
-              className={cn(
-                "flex items-center gap-2 transition-all",
-                isAIActive
-                  ? "text-primary hover:text-primary/80 bg-primary/10 hover:bg-primary/20"
-                  : "text-white/60 hover:text-white/80 hover:bg-white/10",
-              )}
-            >
-              {isAIActive ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              AI Agent {isAIActive ? "Active" : "Paused"}
-              {isAIActive && <Sparkles className="h-3 w-3 animate-pulse" />}
+            {/* Future: AI Toggle (disabled for now) */}
+            {/* 
+            <Button variant="ghost" size="sm" className="text-white/60">
+              AI Agent (Coming Soon)
             </Button>
+            */}
 
             {/* Metrics */}
             <div className="flex items-center gap-4">
@@ -517,7 +452,7 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
 
         <DndContext
           sensors={sensors}
-          collisionDetection={closestCorners}
+          collisionDetection={customCollisionDetection}
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
@@ -530,9 +465,6 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
                 onCardClick={handleCardClick}
                 onCreateTask={() => setIsCreateModalOpen(true)}
                 isDragOver={dragOverColumn === column.id}
-                aiWorkingTasks={aiWorkingTasks}
-                taskActivities={taskActivities}
-                transitioningTasks={transitioningTasks}
               />
             ))}
           </div>
