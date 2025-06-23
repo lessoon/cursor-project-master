@@ -1,0 +1,359 @@
+{
+  "epics": [
+    {
+      "id": "E-1",
+      "title": "UI Skeleton Implementation",
+      "motivation": "Core kanban interface with drag-drop for visual task management",
+      "children": ["T-1", "T-2", "T-3", "T-4", "T-5"]
+    },
+    {
+      "id": "E-2", 
+      "title": "Data Bridge Integration",
+      "motivation": "File system integration to read/write markdown task files",
+      "children": ["T-6", "T-7", "T-8", "T-9"]
+    },
+    {
+      "id": "E-3",
+      "title": "AI Task Generation", 
+      "motivation": "Gemini integration for intelligent task creation from requirements",
+      "children": ["T-10", "T-11", "T-12"]
+    },
+    {
+      "id": "E-4",
+      "title": "AI Agent Pulse System",
+      "motivation": "Automated task progression with visual feedback and controls", 
+      "children": ["T-13", "T-14", "T-15"]
+    },
+    {
+      "id": "E-5",
+      "title": "Document Viewer Integration",
+      "motivation": "Context pack for project resources and documentation management",
+      "children": ["T-16", "T-17", "T-18"]
+    },
+    {
+      "id": "E-6", 
+      "title": "Testing & Quality Assurance",
+      "motivation": "Comprehensive test coverage for reliability and CI/CD pipeline",
+      "children": ["T-19", "T-20", "T-21"]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T-1",
+      "epic": "E-1", 
+      "title": "CreateKanbanBoardLayout",
+      "description": "Build responsive 4-column layout with proper spacing, dark theme, and empty state handling",
+      "criteria": ["4 columns render with correct titles", "Responsive design works on mobile/desktop", "Dark theme styling applied", "Empty state UI implemented", "Column headers show task counts"],
+      "type": "feature",
+      "dependencies": [],
+      "effort": 2,
+      "ui_review": true
+    },
+    {
+      "id": "T-2", 
+      "epic": "E-1",
+      "title": "ImplementTaskCards",
+      "description": "Design task card components with title, summary, progress ring, tags, and hover animations",
+      "criteria": ["Card displays task title and summary", "Progress ring shows completion percentage", "Tags render as pill chips", "Hover states and animations work", "Card truncation handled properly"],
+      "type": "feature", 
+      "dependencies": ["T-1"],
+      "effort": 3,
+      "ui_review": true
+    },
+    {
+      "id": "T-3",
+      "epic": "E-1",
+      "title": "AddDragDropFunctionality",
+      "description": "Implement DnD Kit for moving cards between columns with smooth animations and touch support",
+      "criteria": ["Cards can be dragged between columns", "Drag overlay shows preview", "Drop zones are visually indicated", "Animations are smooth", "Touch support for mobile works"],
+      "type": "feature",
+      "dependencies": ["T-2"], 
+      "effort": 3,
+      "ui_review": true
+    },
+    {
+      "id": "T-4",
+      "epic": "E-1",
+      "title": "BuildTaskDetailModal", 
+      "description": "Create modal for viewing/editing task details, checklist, dependencies, and source file links",
+      "criteria": ["Modal opens when card clicked", "Shows task title, description, checklist", "Checklist items are interactive", "Dependencies display as clickable IDs", "Source file deep-link button works"],
+      "type": "feature",
+      "dependencies": ["T-2"],
+      "effort": 2, 
+      "ui_review": true
+    },
+    {
+      "id": "T-5",
+      "epic": "E-1", 
+      "title": "CreateNavigationBar",
+      "description": "Build top navigation with app logo, AI controls, settings, and context pack toggle",
+      "criteria": ["Logo and app name displayed", "AI pause/resume controls work", "Settings button opens modal", "Context pack toggle works", "Responsive layout applied"],
+      "type": "feature",
+      "dependencies": [],
+      "effort": 1,
+      "ui_review": true
+    },
+    {
+      "id": "T-6",
+      "epic": "E-2",
+      "title": "DesignTaskFileSchema",
+      "description": "Define markdown task file structure with frontmatter, validation rules, and parsing logic",
+      "criteria": ["Frontmatter schema documented", "Task parsing logic implemented", "File naming convention defined", "Validation rules specified", "Example task files created"], 
+      "type": "design",
+      "dependencies": [],
+      "effort": 1,
+      "ui_review": false
+    },
+    {
+      "id": "T-7",
+      "epic": "E-2",
+      "title": "ImplementFileSystemReader",
+      "description": "Build service to read task files from project/tasks directories and parse into CPMTask objects",
+      "criteria": ["Reads files from all task directories", "Parses frontmatter correctly", "Handles file system errors gracefully", "Supports file watching for updates", "Returns properly typed CPMTask objects"],
+      "type": "feature",
+      "dependencies": ["T-6"],
+      "effort": 2,
+      "ui_review": false
+    },
+    {
+      "id": "T-8",
+      "epic": "E-2", 
+      "title": "ImplementFileSystemWriter",
+      "description": "Build service to write CPMTask objects back to markdown files with proper formatting",
+      "criteria": ["Writes tasks to correct directories", "Maintains frontmatter format", "Preserves markdown structure", "Handles concurrent write operations", "Includes git integration for moves"],
+      "type": "feature",
+      "dependencies": ["T-6"],
+      "effort": 2,
+      "ui_review": false
+    },
+    {
+      "id": "T-9",
+      "epic": "E-2",
+      "title": "ImplementTaskSyncService", 
+      "description": "Create bidirectional sync between UI state and file system with conflict resolution",
+      "criteria": ["UI updates trigger file writes", "File changes update UI state", "Conflict resolution implemented", "Handles multiple user scenarios", "Maintains data consistency"],
+      "type": "feature",
+      "dependencies": ["T-7", "T-8"],
+      "effort": 3,
+      "ui_review": false
+    },
+    {
+      "id": "T-10",
+      "epic": "E-3",
+      "title": "IntegrateGeminiAPI",
+      "description": "Set up Gemini Pro 1.5 API integration with key management, validation, and error handling",
+      "criteria": ["API key storage and validation", "Secure API communication", "Error handling for API failures", "Rate limiting implemented", "API key settings modal works"],
+      "type": "feature", 
+      "dependencies": [],
+      "effort": 2,
+      "ui_review": false
+    },
+    {
+      "id": "T-11",
+      "epic": "E-3",
+      "title": "BuildCreateTaskModal",
+      "description": "Design AI-powered task creation modal with requirement input and structured generation preview",
+      "criteria": ["Natural language input field", "Generate button triggers AI", "Preview shows structured task", "Edit capability before creation", "Validation and error states"],
+      "type": "feature",
+      "dependencies": ["T-10"],
+      "effort": 2,
+      "ui_review": true
+    },
+    {
+      "id": "T-12",
+      "epic": "E-3",
+      "title": "ImplementTaskGenerationLogic",
+      "description": "Create task decomposition service using Gemini API with proper prompting and post-processing",
+      "criteria": ["Converts requirements to structured tasks", "Generates realistic checklists", "Assigns appropriate effort levels", "Handles generation failures gracefully", "Creates multiple atomic tasks when needed"],
+      "type": "feature",
+      "dependencies": ["T-10", "T-11"],
+      "effort": 3,
+      "ui_review": false
+    },
+    {
+      "id": "T-13",
+      "epic": "E-4",
+      "title": "BuildAIAutomationService",
+      "description": "Create background service that simulates AI agent activity with configurable timing and behavior",
+      "criteria": ["Background task processing simulation", "Configurable automation speed", "Task transition logic implemented", "Checklist auto-completion", "Activity logging and metrics"],
+      "type": "feature",
+      "dependencies": [],
+      "effort": 3,
+      "ui_review": false
+    },
+    {
+      "id": "T-14",
+      "epic": "E-4", 
+      "title": "ImplementAIVisualIndicators",
+      "description": "Add visual feedback for AI activity including working indicators, progress animations, and activity notifications",
+      "criteria": ["Sparkle indicators show AI working", "Progress rings animate smoothly", "Activity notifications slide up", "Transition effects during status changes", "AI working state propagates to cards"],
+      "type": "feature",
+      "dependencies": ["T-13", "T-2"],
+      "effort": 2,
+      "ui_review": true
+    },
+    {
+      "id": "T-15",
+      "epic": "E-4",
+      "title": "AddAIControlInterface", 
+      "description": "Create AI automation controls with pause/resume, speed adjustment, and activity monitoring",
+      "criteria": ["Pause/resume AI automation", "Speed control slider", "Live activity feed", "AI metrics dashboard", "Manual override capabilities"],
+      "type": "feature",
+      "dependencies": ["T-13", "T-5"],
+      "effort": 2,
+      "ui_review": true
+    },
+    {
+      "id": "T-16",
+      "epic": "E-5",
+      "title": "BuildContextPackSidebar",
+      "description": "Create collapsible sidebar for project resources with search, filtering, and categorization",
+      "criteria": ["Collapsible sidebar with smooth animation", "Resource list with icons and metadata", "Search and filter functionality", "Category organization", "Resource upload button integration"],
+      "type": "feature",
+      "dependencies": [],
+      "effort": 2,
+      "ui_review": true
+    },
+    {
+      "id": "T-17",
+      "epic": "E-5",
+      "title": "ImplementDocumentViewer",
+      "description": "Build modal document viewer with markdown rendering, syntax highlighting, and navigation",
+      "criteria": ["Markdown content renders properly", "Code syntax highlighting works", "Document navigation and scrolling", "Full-screen viewing mode", "Close and back navigation"],
+      "type": "feature",
+      "dependencies": ["T-16"],
+      "effort": 2,
+      "ui_review": true
+    },
+    {
+      "id": "T-18",
+      "epic": "E-5",
+      "title": "AddResourceUploadSystem",
+      "description": "Create file upload modal for adding project documents with validation and storage",
+      "criteria": ["File upload with drag-drop support", "File type validation and size limits", "Progress indicators during upload", "Duplicate file handling", "Resource metadata extraction"],
+      "type": "feature", 
+      "dependencies": ["T-16"],
+      "effort": 2,
+      "ui_review": true
+    },
+    {
+      "id": "T-19",
+      "epic": "E-6",
+      "title": "WriteUnitTests",
+      "description": "Create comprehensive unit tests for components, services, and utilities with 70%+ coverage",
+      "criteria": ["Component testing with React Testing Library", "Service layer unit tests", "Utility function tests", "Mock implementations for external APIs", "Coverage reports generated"],
+      "type": "test",
+      "dependencies": ["T-9", "T-12", "T-13"],
+      "effort": 3,
+      "ui_review": false
+    },
+    {
+      "id": "T-20",
+      "epic": "E-6",
+      "title": "WriteE2ETests", 
+      "description": "Build Playwright tests for critical user flows including task creation, drag-drop, and AI automation",
+      "criteria": ["Task creation flow tested", "Drag and drop functionality tested", "AI automation scenarios covered", "Modal interactions tested", "File system integration verified"],
+      "type": "test",
+      "dependencies": ["T-12", "T-15", "T-18"],
+      "effort": 3,
+      "ui_review": false
+    },
+    {
+      "id": "T-21",
+      "epic": "E-6",
+      "title": "SetupCIPipeline",
+      "description": "Configure GitHub Actions for automated testing, linting, type checking, and deployment",
+      "criteria": ["Automated test execution on PR", "ESLint and Prettier checks", "TypeScript type checking", "Build verification", "Deployment to staging/production"],
+      "type": "feature",
+      "dependencies": ["T-19", "T-20"],
+      "effort": 2,
+      "ui_review": false
+    }
+  ],
+  "subtasks": [
+    {
+      "id": "S-1",
+      "parent": "T-1", 
+      "title": "DesignColumnHeaders",
+      "criteria": ["Status icons for each column", "Task count badges", "Responsive typography"]
+    },
+    {
+      "id": "S-2", 
+      "parent": "T-1",
+      "title": "ImplementColumnStyling",
+      "criteria": ["Glassmorphism effects applied", "Proper spacing and padding", "Border styling and shadows"] 
+    },
+    {
+      "id": "S-3",
+      "parent": "T-2",
+      "title": "CreateProgressRingComponent",
+      "criteria": ["Circular progress with percentage", "Smooth animation transitions", "Color coding by status"]
+    },
+    {
+      "id": "S-4", 
+      "parent": "T-2",
+      "title": "ImplementTagPillDesign",
+      "criteria": ["Pill-shaped tag styling", "Color coding by tag type", "Truncation for long tags"]
+    },
+    {
+      "id": "S-5",
+      "parent": "T-3",
+      "title": "ConfigureDnDKit",
+      "criteria": ["DnD Kit library setup", "Drag sensors configured", "Collision detection tuned"]
+    },
+    {
+      "id": "S-6",
+      "parent": "T-3", 
+      "title": "ImplementDragOverlay",
+      "criteria": ["Preview shows during drag", "Smooth overlay animations", "Proper z-index handling"]
+    },
+    {
+      "id": "S-7",
+      "parent": "T-4",
+      "title": "DesignModalLayout",
+      "criteria": ["Modal responsive design", "Proper spacing and typography", "Accessible close buttons"]
+    },
+    {
+      "id": "S-8",
+      "parent": "T-4",
+      "title": "ImplementChecklistInteractions", 
+      "criteria": ["Checkbox toggle functionality", "Visual feedback on completion", "Progress updates on check"]
+    },
+    {
+      "id": "S-9",
+      "parent": "T-7",
+      "title": "ParseFrontmatterData",
+      "criteria": ["YAML frontmatter parsing", "Type validation and defaults", "Error handling for malformed files"]
+    },
+    {
+      "id": "S-10",
+      "parent": "T-7",
+      "title": "ImplementFileWatcher",
+      "criteria": ["File system change detection", "Debounced update handling", "Cross-platform compatibility"]
+    },
+    {
+      "id": "S-11", 
+      "parent": "T-13",
+      "title": "CreateTaskTransitionLogic",
+      "criteria": ["Realistic progression timing", "Status change validation", "Dependency checking"]
+    },
+    {
+      "id": "S-12",
+      "parent": "T-13",
+      "title": "ImplementChecklistAutomation",
+      "criteria": ["Random checklist completion", "Progress calculation updates", "Activity logging"]
+    },
+    {
+      "id": "S-13",
+      "parent": "T-16",
+      "title": "DesignResourceIcons",
+      "criteria": ["File type specific icons", "Consistent icon sizing", "Status indicators"]
+    },
+    {
+      "id": "S-14",
+      "parent": "T-17",
+      "title": "SetupMarkdownRenderer",
+      "criteria": ["Markdown to HTML conversion", "Code block syntax highlighting", "Link handling and security"]
+    }
+  ]
+} 
