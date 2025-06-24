@@ -151,14 +151,25 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h2 className="text-xl font-semibold text-white">Context Pack</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-gray-400 hover:text-white hover:bg-white/10"
-          >
-            <X className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {/* TODO: Implement add resource functionality */}}
+              className="text-gray-400 hover:text-white hover:bg-white/10 text-sm"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Add Resource
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="text-gray-400 hover:text-white hover:bg-white/10"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
 
         {/* Search */}
@@ -206,7 +217,7 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
                           {resource.title}
                         </h3>
                         <p className="text-xs text-gray-400">
-                          {resource.type}
+                          {resource.type} • {formatFileSize(resource.size)}
                         </p>
                       </div>
                     </div>
@@ -230,19 +241,8 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
 
         {/* Footer */}
         <div className="p-4 border-t border-white/10">
-          <div className="flex items-center justify-between">
-            <div className="text-xs text-gray-400">
-              {filteredResources.length} resource{filteredResources.length !== 1 ? 's' : ''} available
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {/* TODO: Implement add resource functionality */}}
-              className="text-gray-400 hover:text-white hover:bg-white/10 text-xs h-7"
-            >
-              <Plus className="h-3 w-3 mr-1" />
-              Add Resource
-            </Button>
+          <div className="text-xs text-gray-400 text-center">
+            {filteredResources.length} resource{filteredResources.length !== 1 ? 's' : ''} available
           </div>
         </div>
       </div>
