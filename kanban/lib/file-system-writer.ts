@@ -18,10 +18,15 @@ function taskToMarkdown(task: CPMTask): string {
     lines.push(`**Type:** ${type}`)
   }
   
-  // Extract epic from labels
-  const epic = task.labels.find(label => label.startsWith('e-') || label.includes('epic'))
+  // Extract epic from labels (look for E-X pattern or epic labels)
+  const epic = task.labels.find(label => label.match(/^E-\d+$/) || label.startsWith('e-') || label.includes('epic'))
   if (epic) {
     lines.push(`**Epic:** ${epic}`)
+  }
+  
+  // Add all labels as a metadata field
+  if (task.labels.length > 0) {
+    lines.push(`**Labels:** ${task.labels.join(', ')}`)
   }
   
   // Calculate effort from progress or default
