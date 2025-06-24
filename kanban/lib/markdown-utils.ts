@@ -107,27 +107,33 @@ export function parseMarkdown(markdown: string): string {
 
       // Handle paragraphs and line breaks
   html = html
-    .replace(/\n\n+/g, '</p><p class="text-white leading-relaxed mb-4">')
+    .replace(/\n\n+/g, '</p><p class="text-white/90 leading-relaxed mb-4">')
     .replace(/\n/g, '<br>')
 
-  // Wrap remaining content in paragraphs (improved logic)
-  const lines2 = html.split('\n')
-  const wrappedLines = lines2.map(line => {
-    const trimmed = line.trim()
-    if (!trimmed || 
-        trimmed.startsWith('<h') || 
-        trimmed.startsWith('<pre') || 
-        trimmed.startsWith('<ul') || 
-        trimmed.startsWith('<table') || 
-        trimmed.startsWith('<hr') ||
-        trimmed.includes('</p>') ||
-        trimmed.includes('<p class=')) {
-      return line
-    }
-    return `<p class="text-white leading-relaxed mb-4">${line}</p>`
-  })
+  // Split into lines and process each one
+  const finalLines = html.split('\n')
+  const processedFinalLines: string[] = []
 
-  return wrappedLines.join('\n')
+  for (const line of finalLines) {
+    const trimmed = line.trim()
+    
+    // Skip empty lines
+    if (!trimmed) {
+      processedFinalLines.push(line)
+      continue
+    }
+    
+    // Skip lines that are already HTML elements
+    if (trimmed.startsWith('<') && trimmed.includes('>')) {
+      processedFinalLines.push(line)
+      continue
+    }
+    
+    // This is plain text that needs to be wrapped
+    processedFinalLines.push(`<p class="text-white/90 leading-relaxed mb-4">${line}</p>`)
+  }
+  
+  return processedFinalLines.join('\n')
 }
 
 // Extract title from markdown content (first # heading or filename)
