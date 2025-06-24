@@ -151,24 +151,14 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h2 className="text-xl font-semibold text-white">Context Pack</h2>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {/* TODO: Implement add resource functionality */}}
-              className="text-gray-400 hover:text-white hover:bg-white/10"
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-gray-400 hover:text-white hover:bg-white/10"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="text-gray-400 hover:text-white hover:bg-white/10"
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
 
         {/* Search */}
@@ -200,40 +190,38 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
               return (
                 <div
                   key={resource.id}
-                  className="group relative bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
+                  className="group bg-white/5 rounded-lg p-3 border border-white/10 hover:bg-white/10 transition-colors cursor-pointer"
                   onClick={() => handleOpenDocument(resource)}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className={cn(
-                      "p-2 rounded-lg border flex-shrink-0",
-                      getResourceColor(resource.type)
-                    )}>
-                      <Icon className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-white group-hover:text-blue-400 transition-colors">
-                        {resource.title}
-                      </h3>
-                      <p className="text-sm text-gray-400 mt-1">
-                        {resource.type}
-                      </p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
-                        <span>{formatFileSize(resource.size)}</span>
-                        <span>•</span>
-                        <span>{formatDate(resource.lastModified)}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        "p-1.5 rounded border flex-shrink-0",
+                        getResourceColor(resource.type)
+                      )}>
+                        <Icon className="h-3 w-3" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-white text-sm group-hover:text-blue-400 transition-colors truncate">
+                          {resource.title}
+                        </h3>
+                        <p className="text-xs text-gray-400">
+                          {resource.type}
+                        </p>
                       </div>
                     </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity text-xs px-2 py-1 h-auto text-white hover:text-white"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleOpenDocument(resource)
+                      }}
+                    >
+                      Open
+                    </Button>
                   </div>
-                  <Button
-                    size="sm"
-                    className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-white/10 hover:bg-white/20 text-white border-white/20"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleOpenDocument(resource)
-                    }}
-                  >
-                    Open
-                  </Button>
                 </div>
               )
             })
@@ -242,8 +230,19 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
 
         {/* Footer */}
         <div className="p-4 border-t border-white/10">
-          <div className="text-xs text-gray-400 text-center">
-            {filteredResources.length} resource{filteredResources.length !== 1 ? 's' : ''} available
+          <div className="flex items-center justify-between">
+            <div className="text-xs text-gray-400">
+              {filteredResources.length} resource{filteredResources.length !== 1 ? 's' : ''} available
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {/* TODO: Implement add resource functionality */}}
+              className="text-gray-400 hover:text-white hover:bg-white/10 text-xs h-7"
+            >
+              <Plus className="h-3 w-3 mr-1" />
+              Add Resource
+            </Button>
           </div>
         </div>
       </div>
