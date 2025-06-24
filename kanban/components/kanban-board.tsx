@@ -111,12 +111,15 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
   useEffect(() => {
     taskApi.fetchTasks().then(setBoard).catch(console.error)
     
-    // Set up periodic refresh to keep UI in sync with file changes
-    const refreshInterval = setInterval(() => {
-      taskApi.fetchTasks().then(setBoard).catch(console.error)
-    }, 3000) // Refresh every 3 seconds
+    // Optional: Refresh when tab becomes visible (user returns to app)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        taskApi.fetchTasks().then(setBoard).catch(console.error)
+      }
+    }
     
-    return () => clearInterval(refreshInterval)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [])
 
   // Future: AI Automation Effect (disabled for now)
@@ -282,16 +285,40 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
     if (targetColumn && activeColumn.id !== targetColumn.id) {
       const task = activeColumn.tasks.find((t) => t.id === activeId)
       if (task) {
-        // Move the actual file and refresh board
+        // Optimistically update UI first for immediate feedback
+        setBoard((prev) => {
+          if (!prev) return prev
+
+          const newColumns = prev.columns.map((col) => {
+            if (col.id === activeColumn.id) {
+              return {
+                ...col,
+                tasks: col.tasks.filter((t) => t.id !== activeId),
+              }
+            }
+            if (col.id === targetColumn.id) {
+              return {
+                ...col,
+                tasks: [...col.tasks, { ...task, status: targetColumn.id as CPMTask["status"] }],
+              }
+            }
+            return col
+          })
+
+          return { ...prev, columns: newColumns }
+        })
+
+        // Then move the actual file
         taskApi.moveTask(task.id, task.status, targetColumn.id as CPMTask["status"])
           .then(() => {
-            // Refresh board data to get the updated state
+            // Refresh board data to ensure consistency
             return taskApi.fetchTasks()
           })
           .then(setBoard)
           .catch((error: Error) => {
             console.error("❌ Failed to move task file:", error)
-            // TODO: Show error toast
+            // Revert UI on error
+            taskApi.fetchTasks().then(setBoard)
           })
 
         // Fire status change callback
@@ -308,7 +335,15 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
   }
 
   const handleCreateTask = (taskData: Omit<CPMTask, "id" | "status" | "createdAt" | "updatedAt" | "filePath">) => {
-    const taskId = `T-${Date.now()}`
+    // Generate sequential task ID
+    const existingTaskIds = board?.columns.flatMap(col => col.tasks.map(t => t.id)) || []
+    const existingNumbers = existingTaskIds
+      .filter(id => id.startsWith('T-'))
+      .map(id => parseInt(id.replace('T-', ''), 10))
+      .filter(num => !isNaN(num))
+    const nextNumber = existingNumbers.length > 0 ? Math.max(...existingNumbers) + 1 : 1
+    const taskId = `T-${nextNumber}`
+    
     const newTask: CPMTask = {
       ...taskData,
       id: taskId,
