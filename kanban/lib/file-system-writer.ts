@@ -13,20 +13,15 @@ function taskToMarkdown(task: CPMTask): string {
   lines.push('')
   
   // Frontmatter-style metadata
-  if (task.labels.includes('feature') || task.labels.includes('bug') || task.labels.includes('design')) {
-    const type = task.labels.find(label => ['feature', 'bug', 'design', 'test', 'refactor'].includes(label)) || 'feature'
+  if (task.labels.includes('feature') || task.labels.includes('enhancement') || task.labels.includes('bugfix')) {
+    const type = task.labels.find(label => ['feature', 'enhancement', 'bugfix', 'testing', 'docs'].includes(label)) || 'feature'
     lines.push(`**Type:** ${type}`)
   }
   
-  // Extract epic from labels (look for E-X pattern or epic labels)
-  const epic = task.labels.find(label => label.match(/^E-\d+$/) || label.startsWith('e-') || label.includes('epic'))
-  if (epic) {
-    lines.push(`**Epic:** ${epic}`)
-  }
-  
-  // Add all labels as a metadata field
+  // Add labels as metadata (limit to 2 as specified)
   if (task.labels.length > 0) {
-    lines.push(`**Labels:** ${task.labels.join(', ')}`)
+    const displayLabels = task.labels.slice(0, 2) // Show at most 2 labels
+    lines.push(`**Labels:** ${displayLabels.join(', ')}`)
   }
   
   // Calculate effort from progress or default

@@ -1,46 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
-import { promises as fs } from 'fs'
-import path from 'path'
 
 let genAI: GoogleGenerativeAI | null = null
-
-/**
- * Get project context including epics and current task structure
- */
-async function getProjectContext(): Promise<string> {
-  try {
-    const projectRoot = process.cwd().replace('/kanban', '')
-    const planPath = path.join(projectRoot, 'project', 'plan.json')
-    
-    const planContent = await fs.readFile(planPath, 'utf-8')
-    const plan = JSON.parse(planContent)
-    
-    const epics = plan.epics.map((epic: any) => 
-      `${epic.id}: ${epic.title} - ${epic.motivation}`
-    ).join('\n')
-    
-    return `
-Available Epics:
-${epics}
-
-Task ID Pattern: T-{number} (sequential)
-Epic Assignment: Based on requirement content, assign to most relevant epic
-`
-  } catch (error) {
-    console.warn('Could not load project context:', error)
-    return `
-Available Epics:
-E-1: UI Skeleton - Core kanban interface components
-E-2: Data Bridge - File system integration  
-E-3: AI Generation - Gemini integration features
-E-4: AI Pulse - Automation and background processing
-E-5: Doc Viewer - Documentation and context management
-E-6: Testing - Quality assurance and testing
-
-Task ID Pattern: T-{number} (sequential)
-`
-  }
-}
 
 export function initializeGemini(apiKey: string) {
   try {
@@ -75,7 +35,6 @@ export async function generateTasksFromRequirement(requirement: string): Promise
   description: string
   checklist: Array<{ text: string; completed: boolean }>
   labels: string[]
-  epic?: string
 }> {
   if (!genAI) {
     throw new Error("Gemini AI not initialized. Please set your API key in settings.")
@@ -83,17 +42,11 @@ export async function generateTasksFromRequirement(requirement: string): Promise
 
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
-
-    // Get project context for better task generation
-    const projectContext = await getProjectContext()
     
     const prompt = `
 You are a project management AI assistant for a CPM Kanban Board project. Transform the following feature requirement into a structured task that fits within this project context.
 
 Project Context: This is a CPM (Critical Path Method) Kanban Board application built with Next.js, TypeScript, and Tailwind CSS. The system manages tasks using markdown files, provides drag-and-drop functionality, context pack for documentation, and integrates with Gemini AI for task generation.
-
-Current Project Structure:
-${projectContext}
 
 Requirement: "${requirement}"
 
@@ -108,27 +61,25 @@ Please respond with a JSON object in this exact format:
     {"text": "Specific actionable step 3 for CPM Kanban", "completed": false},
     {"text": "Specific actionable step 4 for CPM Kanban", "completed": false}
   ],
-  "labels": ["epic-name", "feature", "ui", "frontend", "enhancement", "bugfix", "testing", "docs", "api"],
-  "epic": "E-X"
+  "labels": ["feature", "ui"]
 }
 
 Guidelines:
 - Title should start with an action verb (Build, Create, Implement, Design, Fix, Enhance, etc.)
 - Make tasks specific to the CPM Kanban Board project context
-- Assign to the most relevant epic (E-1 through E-6) based on the requirement
-- Use relevant labels including epic name: e-ui-skeleton, e-data-bridge, e-ai-generation, e-ai-pulse, e-doc-viewer, e-testing
-- Technology labels: frontend, ui, feature, enhancement, bugfix, testing, docs, api, integration
+- Use exactly 2 relevant labels maximum from: feature, enhancement, bugfix, ui, frontend, backend, testing, docs, api, integration
+- Prioritize type labels: feature (new functionality), enhancement (improvements), bugfix (fixes)
+- Add technology/area labels: ui, frontend, backend, testing, docs, api, integration
 - Checklist should have 3-6 specific, actionable steps that fit the project
 - Consider the existing codebase structure (components, lib, types, etc.)
 - Keep everything concise and actionable
 
-Epic Mapping:
-- E-1 (UI Skeleton): UI components, layout, styling, drag-drop interface
-- E-2 (Data Bridge): File system, data persistence, markdown parsing
-- E-3 (AI Generation): Gemini integration, task creation, AI features
-- E-4 (AI Pulse): Automation, background processing, AI indicators
-- E-5 (Doc Viewer): Documentation, context pack, resource management
-- E-6 (Testing): Tests, quality assurance, CI/CD
+Label Examples:
+- ["feature", "ui"] - New UI component
+- ["enhancement", "frontend"] - Improving existing frontend
+- ["bugfix", "api"] - Fixing API issue
+- ["feature", "testing"] - Adding tests
+- ["enhancement", "docs"] - Improving documentation
 
 Respond only with the JSON object, no additional text.
 `

@@ -53,17 +53,11 @@ export function CreateTaskModal({ isOpen, onClose, onCreateTask }: CreateTaskMod
   const handleCreateTask = () => {
     if (!generatedTask) return
 
-    // Include epic in labels if provided
-    const labels = [...generatedTask.labels]
-    if (generatedTask.epic && !labels.includes(generatedTask.epic)) {
-      labels.unshift(generatedTask.epic) // Add epic as first label
-    }
-
     const newTask = {
       title: generatedTask.title,
       summary: generatedTask.summary,
       description: generatedTask.description,
-      labels: labels,
+      labels: generatedTask.labels,
       checklist: generatedTask.checklist,
       progress: 0,
     }
@@ -224,16 +218,6 @@ export function CreateTaskModal({ isOpen, onClose, onCreateTask }: CreateTaskMod
                       className="min-h-[100px] bg-white/5 border-white/10 text-white resize-none"
                     />
                   </div>
-
-                  {/* Epic Assignment */}
-                  {generatedTask.epic && (
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-2">Epic Assignment</label>
-                      <Badge className="bg-[#5B8EFF]/20 text-[#5B8EFF] border border-[#5B8EFF]/30">
-                        {generatedTask.epic}
-                      </Badge>
-                    </div>
-                  )}
 
                   {/* Labels */}
                   <div>
