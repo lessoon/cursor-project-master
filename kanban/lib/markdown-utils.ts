@@ -57,7 +57,7 @@ export function parseMarkdown(markdown: string): string {
       const content = line.replace(/^\||\|$/g, '')
       const cells = content.split('|').map((cell: string) => cell.trim())
       const cellsHtml = cells.map((cell: string) => 
-        `<td class="px-3 py-2 border border-white/10 text-white/80">${cell}</td>`
+        `<td class="px-3 py-2 border border-white/10 text-white">${cell}</td>`
       ).join('')
       tableRows.push(`<tr>${cellsHtml}</tr>`)
     } else if (isTableSeparator) {
@@ -79,7 +79,7 @@ export function parseMarkdown(markdown: string): string {
         }
         const match = line.match(/^[\s]*[*-]\s+(.*)$/)
         if (match) {
-          listItems.push(`<li class="text-white/80 mb-1 ml-4">${match[1]}</li>`)
+          listItems.push(`<li class="text-white mb-1 ml-4">${match[1]}</li>`)
         }
       } else {
         if (inList) {
@@ -105,9 +105,9 @@ export function parseMarkdown(markdown: string): string {
 
   html = processedLines.join('\n')
 
-  // Handle paragraphs and line breaks
+      // Handle paragraphs and line breaks
   html = html
-    .replace(/\n\n+/g, '</p><p class="text-white/80 leading-relaxed mb-4">')
+    .replace(/\n\n+/g, '</p><p class="text-white leading-relaxed mb-4">')
     .replace(/\n/g, '<br>')
 
   // Wrap remaining content in paragraphs (improved logic)
@@ -124,7 +124,7 @@ export function parseMarkdown(markdown: string): string {
         trimmed.includes('<p class=')) {
       return line
     }
-    return `<p class="text-white/80 leading-relaxed mb-4">${line}</p>`
+    return `<p class="text-white leading-relaxed mb-4">${line}</p>`
   })
 
   return wrappedLines.join('\n')

@@ -15,7 +15,7 @@ export function initializeGemini(apiKey: string) {
 export async function validateGeminiKey(apiKey: string): Promise<boolean> {
   try {
     const testAI = new GoogleGenerativeAI(apiKey)
-    const model = testAI.getGenerativeModel({ model: "gemini-pro" })
+    const model = testAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
     // Simple test prompt
     const result = await model.generateContent("Say 'API key is valid' if you can read this.")
@@ -41,7 +41,7 @@ export async function generateTasksFromRequirement(requirement: string): Promise
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
     const prompt = `
 You are a project management AI assistant. Transform the following feature requirement into a structured task.

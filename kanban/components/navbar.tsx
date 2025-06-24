@@ -7,9 +7,10 @@ import { Package, Settings } from "lucide-react"
 interface NavbarProps {
   onToggleContextPack: () => void
   onOpenSettings: () => void
+  contextPackCount?: number
 }
 
-export function Navbar({ onToggleContextPack, onOpenSettings }: NavbarProps) {
+export function Navbar({ onToggleContextPack, onOpenSettings, contextPackCount = 0 }: NavbarProps) {
   return (
     <nav className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0B0E14]/80 backdrop-blur-[12px]">
       {/* Logo */}
@@ -39,7 +40,11 @@ export function Navbar({ onToggleContextPack, onOpenSettings }: NavbarProps) {
         >
           <Package className="h-4 w-4 mr-2" />
           Context Pack
-          <Badge className="ml-2 bg-[#5B8EFF] text-white text-xs px-1.5 py-0.5">5</Badge>
+          {contextPackCount > 0 && (
+            <Badge className="ml-2 bg-[#5B8EFF] text-white text-xs px-1.5 py-0.5">
+              {contextPackCount}
+            </Badge>
+          )}
         </Button>
       </div>
     </nav>

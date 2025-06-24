@@ -20,6 +20,7 @@ interface Resource {
 interface ContextPackProps {
   isOpen: boolean
   onClose: () => void
+  onResourceCountChange?: (count: number) => void
 }
 
 // Context pack service functions
@@ -46,7 +47,7 @@ const fetchResourceContent = async (id: string): Promise<Resource | null> => {
   }
 }
 
-export function ContextPack({ isOpen, onClose }: ContextPackProps) {
+export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextPackProps) {
   const [resources, setResources] = useState<Resource[]>([])
   const [filteredResources, setFilteredResources] = useState<Resource[]>([])
   const [searchQuery, setSearchQuery] = useState("")
@@ -81,6 +82,7 @@ export function ContextPack({ isOpen, onClose }: ContextPackProps) {
     try {
       const resourceList = await fetchResources()
       setResources(resourceList)
+      onResourceCountChange?.(resourceList.length)
     } catch (error) {
       console.error('Failed to load resources:', error)
     } finally {
@@ -149,14 +151,24 @@ export function ContextPack({ isOpen, onClose }: ContextPackProps) {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h2 className="text-xl font-semibold text-white">Context Pack</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-gray-400 hover:text-white hover:bg-white/10"
-          >
-            <X className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {/* TODO: Implement add resource functionality */}}
+              className="text-gray-400 hover:text-white hover:bg-white/10"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onClose}
+              className="text-gray-400 hover:text-white hover:bg-white/10"
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
 
         {/* Search */}

@@ -179,11 +179,19 @@ export function CardModal({ task, isOpen, onClose, onToggleChecklistItem }: Card
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-white/60">Created:</span>
-                  <p className="text-white/80">{task.createdAt.toLocaleDateString()}</p>
+                  <p className="text-white/80">
+                    {task.createdAt instanceof Date 
+                      ? task.createdAt.toLocaleDateString() 
+                      : new Date(task.createdAt).toLocaleDateString()}
+                  </p>
                 </div>
                 <div>
                   <span className="text-white/60">Updated:</span>
-                  <p className="text-white/80">{task.updatedAt.toLocaleDateString()}</p>
+                  <p className="text-white/80">
+                    {task.updatedAt instanceof Date 
+                      ? task.updatedAt.toLocaleDateString() 
+                      : new Date(task.updatedAt).toLocaleDateString()}
+                  </p>
                 </div>
                 <div>
                   <span className="text-white/60">File Path:</span>

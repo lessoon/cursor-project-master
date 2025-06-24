@@ -45,6 +45,7 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [isContextPackOpen, setIsContextPackOpen] = useState(false)
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
+  const [contextPackCount, setContextPackCount] = useState(0)
 
   // Future: AI Automation State (disabled for now)
   // const [isAIActive, setIsAIActive] = useState(false)
@@ -56,13 +57,23 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
+        delay: 100,
+        tolerance: 5,
       },
     }),
   )
 
-  // Custom collision detection - prioritize column droppables over task sortables
+  // Enhanced collision detection with better performance and accuracy
   const customCollisionDetection: CollisionDetection = (args) => {
     const { active, droppableContainers } = args
+    
+    // Get the active task being dragged
+    const activeId = active.id as string
+    const activeTask = tasksById[activeId]
+    
+    if (!activeTask) {
+      return closestCorners(args)
+    }
     
     // First, check for column droppables (inbox, next-up, running, done)
     const columnIds = ['inbox', 'next-up', 'running', 'done']
@@ -70,7 +81,7 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
       columnIds.includes(container.id as string)
     )
     
-    // Use pointerWithin for columns to get accurate hit detection
+    // Use pointerWithin for more accurate column detection
     const columnCollisions = pointerWithin({
       ...args,
       droppableContainers: columnDroppables
@@ -80,12 +91,16 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
       return columnCollisions
     }
     
-    // Fallback to task sortables if no column intersection
+    // Fallback to rectIntersection for task-to-task positioning
     const taskDroppables = droppableContainers.filter(container => 
       !columnIds.includes(container.id as string)
     )
     
-    const taskCollisions = closestCorners({
+    if (taskDroppables.length === 0) {
+      return []
+    }
+    
+    const taskCollisions = rectIntersection({
       ...args,
       droppableContainers: taskDroppables
     })
@@ -414,6 +429,7 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
       <Navbar
         onToggleContextPack={() => setIsContextPackOpen(!isContextPackOpen)}
         onOpenSettings={() => setIsSettingsModalOpen(true)}
+        contextPackCount={contextPackCount}
       />
 
       <div className="p-6">
@@ -479,7 +495,11 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
         </DndContext>
       </div>
 
-      <ContextPack isOpen={isContextPackOpen} onClose={() => setIsContextPackOpen(false)} />
+      <ContextPack 
+        isOpen={isContextPackOpen} 
+        onClose={() => setIsContextPackOpen(false)}
+        onResourceCountChange={setContextPackCount}
+      />
 
       <CardModal
         task={selectedTask}
