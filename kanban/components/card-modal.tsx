@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import type { CPMTask, Attachment } from "@/types/cpm"
-import { getCPMPlan } from "@/lib/parse-cpm-tasks"
+import { useState } from "react"
+import type { CPMTask } from "@/types/cmp"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { X, CheckCircle2, Circle, FileText, ExternalLink, MoreHorizontal } from "lucide-react"
+import { X, CheckCircle2, Circle, MoreHorizontal } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface CardModalProps {
@@ -15,36 +14,10 @@ interface CardModalProps {
   onToggleChecklistItem?: (taskId: string, itemId: string) => void
 }
 
-const mockAttachments: Attachment[] = [
-  { id: "1", name: "API Documentation", type: "doc", url: "/docs/api" },
-  { id: "2", name: "GitHub Repository", type: "repo", url: "https://github.com/..." },
-  { id: "3", name: "Design System", type: "link", url: "https://design.company.com" },
-]
-
 export function CardModal({ task, isOpen, onClose, onToggleChecklistItem }: CardModalProps) {
-  const [activities, setActivities] = useState<string[]>([])
   const [showMore, setShowMore] = useState(false)
 
-  useEffect(() => {
-    if (task && isOpen) {
-      getCPMPlan(task.id).then(setActivities)
-    }
-  }, [task, isOpen])
-
   if (!task) return null
-
-  const getAttachmentIcon = (type: Attachment["type"]) => {
-    switch (type) {
-      case "doc":
-        return <FileText className="h-3 w-3" />
-      case "repo":
-        return <ExternalLink className="h-3 w-3" />
-      case "link":
-        return <ExternalLink className="h-3 w-3" />
-      default:
-        return <FileText className="h-3 w-3" />
-    }
-  }
 
   return (
     <>
@@ -132,36 +105,7 @@ export function CardModal({ task, isOpen, onClose, onToggleChecklistItem }: Card
             </div>
           )}
 
-          {/* Recent Activity */}
-          {activities.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-white mb-3">Recent Activity</h3>
-              <div className="space-y-2">
-                {activities.map((activity, index) => (
-                  <div key={index} className="flex items-start gap-3 text-sm">
-                    <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
-                    <p className="text-white/70 leading-relaxed">{activity}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* Attachments */}
-          <div>
-            <h3 className="text-sm font-medium text-white mb-3">Attachments</h3>
-            <div className="flex flex-wrap gap-2">
-              {mockAttachments.map((attachment) => (
-                <button
-                  key={attachment.id}
-                  className="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm text-white/80 hover:text-white transition-colors"
-                >
-                  {getAttachmentIcon(attachment.type)}
-                  {attachment.name}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* More Section */}
           {!showMore && (

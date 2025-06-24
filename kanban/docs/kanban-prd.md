@@ -4,6 +4,7 @@
 ---
 
 ## 0 · Purpose
+
 A plug-and-play Kanban UI that lets **non-technical** contributors plan work,
 while Cursor’s agent keeps the underlying markdown task files up-to-date.
 

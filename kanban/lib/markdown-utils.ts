@@ -105,35 +105,47 @@ export function parseMarkdown(markdown: string): string {
 
   html = processedLines.join('\n')
 
-      // Handle paragraphs and line breaks
-  html = html
-    .replace(/\n\n+/g, '</p><p class="text-white/90 leading-relaxed mb-4">')
-    .replace(/\n/g, '<br>')
+  // Handle paragraphs - split by double newlines first
+  const paragraphs = html.split(/\n\s*\n/)
+  const processedParagraphs: string[] = []
 
-  // Split into lines and process each one
-  const finalLines = html.split('\n')
-  const processedFinalLines: string[] = []
+  for (const paragraph of paragraphs) {
+    const lines = paragraph.split('\n')
+    const processedLines: string[] = []
 
-  for (const line of finalLines) {
-    const trimmed = line.trim()
-    
-    // Skip empty lines
-    if (!trimmed) {
-      processedFinalLines.push(line)
-      continue
+    for (const line of lines) {
+      const trimmed = line.trim()
+      
+      // Skip empty lines
+      if (!trimmed) {
+        processedLines.push('')
+        continue
+      }
+      
+      // Skip lines that are already HTML elements
+      if (trimmed.startsWith('<') && (trimmed.includes('</') || trimmed.endsWith('>'))) {
+        processedLines.push(line)
+        continue
+      }
+      
+      // This is plain text that needs proper styling
+      if (!trimmed.startsWith('<')) {
+        processedLines.push(`<span class="text-white/90">${line}</span>`)
+      } else {
+        processedLines.push(line)
+      }
     }
     
-    // Skip lines that are already HTML elements
-    if (trimmed.startsWith('<') && trimmed.includes('>')) {
-      processedFinalLines.push(line)
-      continue
+    // Join lines within a paragraph and wrap in paragraph tags if it contains non-HTML content
+    const joinedLines = processedLines.join('<br>')
+    if (joinedLines.trim() && !joinedLines.trim().startsWith('<h') && !joinedLines.trim().startsWith('<ul') && !joinedLines.trim().startsWith('<table') && !joinedLines.trim().startsWith('<pre') && !joinedLines.trim().startsWith('<hr')) {
+      processedParagraphs.push(`<p class="leading-relaxed mb-4">${joinedLines}</p>`)
+    } else {
+      processedParagraphs.push(joinedLines)
     }
-    
-    // This is plain text that needs to be wrapped
-    processedFinalLines.push(`<p class="text-white/90 leading-relaxed mb-4">${line}</p>`)
   }
   
-  return processedFinalLines.join('\n')
+  return processedParagraphs.join('\n\n')
 }
 
 // Extract title from markdown content (first # heading or filename)

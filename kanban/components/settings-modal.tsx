@@ -80,7 +80,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   }
 
   const getStatusIcon = () => {
-    if (isValidating) return <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
+    if (isValidating) return <Loader2 className="h-4 w-4 animate-spin text-[#5B8EFF]" />
     if (validationStatus === "valid") return <CheckCircle2 className="h-4 w-4 text-green-400" />
     if (validationStatus === "invalid") return <AlertCircle className="h-4 w-4 text-red-400" />
     return null
@@ -94,7 +94,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   }
 
   const getStatusColor = () => {
-    if (isValidating) return "text-blue-300"
+    if (isValidating) return "text-[#5B8EFF]"
     if (validationStatus === "valid") return "text-green-300"
     if (validationStatus === "invalid") return "text-red-300"
     return "text-white/60"
@@ -227,10 +227,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </p>
               <ol className="text-xs text-white/60 space-y-1 list-decimal list-inside">
                 <li>
-                  Visit <span className="text-blue-300">https://makersuite.google.com/app/apikey</span>
+                  Visit <span className="text-[#5B8EFF]">https://makersuite.google.com/app/apikey</span>
                 </li>
                 <li>Sign in with your Google account</li>
-                <li>Click "Create API Key"</li>
+                <li>Click &quot;Create API Key&quot;</li>
                 <li>Copy the key and paste it above</li>
               </ol>
             </div>

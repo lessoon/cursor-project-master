@@ -44,24 +44,22 @@ export async function generateTasksFromRequirement(requirement: string): Promise
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
     
     const prompt = `
-You are a project management AI assistant for a CPM Kanban Board project. Transform the following feature requirement into a structured task that fits within this project context.
-
-Project Context: This is a CPM (Critical Path Method) Kanban Board application built with Next.js, TypeScript, and Tailwind CSS. The system manages tasks using markdown files, provides drag-and-drop functionality, context pack for documentation, and integrates with Gemini AI for task generation.
+You are a project management AI assistant. Transform the following feature requirement into a structured task.
 
 Requirement: "${requirement}"
 
 Please respond with a JSON object in this exact format:
 {
-  "title": "Action-oriented title specific to CPM Kanban (verb + object, max 50 chars)",
-  "summary": "One-line summary relevant to the project (max 80 chars)",
-  "description": "Detailed description explaining what, why, and how it fits in the CPM Kanban system (max 140 words)",
+  "title": "Action-oriented title (verb + object, max 50 chars)",
+  "summary": "One-line summary (max 80 chars)",
+  "description": "Detailed description (max 140 words)",
   "checklist": [
-    {"text": "Specific actionable step 1 for CPM Kanban", "completed": false},
-    {"text": "Specific actionable step 2 for CPM Kanban", "completed": false},
-    {"text": "Specific actionable step 3 for CPM Kanban", "completed": false},
-    {"text": "Specific actionable step 4 for CPM Kanban", "completed": false}
+    {"text": "Specific actionable step 1", "completed": false},
+    {"text": "Specific actionable step 2", "completed": false},
+    {"text": "Specific actionable step 3", "completed": false},
+    {"text": "Specific actionable step 4", "completed": false}
   ],
-  "labels": ["feature", "ui"]
+  "labels": ["tag1", "tag2"]
 }
 
 Guidelines:

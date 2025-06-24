@@ -15,7 +15,8 @@ export class ContextPackService {
   private docsPath: string
   private cache: Map<string, ContextResource> = new Map()
   private lastScan: Date | null = null
-  private readonly CACHE_DURATION = 30000 // 30 seconds
+  // Environment-based cache duration: fast updates in dev, efficient in production
+  private readonly CACHE_DURATION = process.env.NODE_ENV === 'development' ? 2000 : 30000
 
   constructor() {
     // Path to docs directory relative to the kanban app

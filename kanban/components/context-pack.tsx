@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DocumentViewerModal } from "./document-viewer-modal"
@@ -55,12 +55,25 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
   const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false)
   const [loading, setLoading] = useState(true)
 
+  const loadResources = useCallback(async () => {
+    setLoading(true)
+    try {
+      const resourceList = await fetchResources()
+      setResources(resourceList)
+      onResourceCountChange?.(resourceList.length)
+    } catch (error) {
+      console.error('Failed to load resources:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [onResourceCountChange])
+
   // Load resources on mount
   useEffect(() => {
     if (isOpen) {
       loadResources()
     }
-  }, [isOpen])
+  }, [isOpen, loadResources])
 
   // Filter resources based on search
   useEffect(() => {
@@ -76,19 +89,6 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
       setFilteredResources(filtered)
     }
   }, [searchQuery, resources])
-
-  const loadResources = async () => {
-    setLoading(true)
-    try {
-      const resourceList = await fetchResources()
-      setResources(resourceList)
-      onResourceCountChange?.(resourceList.length)
-    } catch (error) {
-      console.error('Failed to load resources:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   const handleOpenDocument = async (resource: Resource) => {
     try {
@@ -151,25 +151,14 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-white/10">
           <h2 className="text-xl font-semibold text-white">Context Pack</h2>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {/* TODO: Implement add resource functionality */}}
-              className="text-gray-400 hover:text-white hover:bg-white/10 text-sm"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              Add Resource
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="text-gray-400 hover:text-white hover:bg-white/10"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="text-gray-400 hover:text-white hover:bg-white/10"
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
 
         {/* Search */}
@@ -213,11 +202,11 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
                         <Icon className="h-3 w-3" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-medium text-white text-sm group-hover:text-blue-400 transition-colors truncate">
+                        <h3 className="font-medium text-white text-sm group-hover:text-[#5B8EFF] transition-colors truncate">
                           {resource.title}
                         </h3>
                         <p className="text-xs text-gray-400">
-                          {resource.type} • {formatFileSize(resource.size)}
+                          {resource.type}
                         </p>
                       </div>
                     </div>
@@ -239,11 +228,15 @@ export function ContextPack({ isOpen, onClose, onResourceCountChange }: ContextP
           )}
         </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t border-white/10">
-          <div className="text-xs text-gray-400 text-center">
-            {filteredResources.length} resource{filteredResources.length !== 1 ? 's' : ''} available
-          </div>
+        {/* Footer with Add Resource Button */}
+        <div className="p-6">
+          <Button
+            onClick={() => {/* TODO: Implement add resource functionality */}}
+            className="w-full bg-[#5B8EFF] hover:bg-[#5B8EFF]/80 text-white font-medium py-3"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Resource
+          </Button>
         </div>
       </div>
 

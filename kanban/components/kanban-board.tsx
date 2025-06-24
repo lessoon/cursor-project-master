@@ -18,8 +18,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable"
 import type { CPMTask, CPMBoard, CPMColumn } from "@/types/cmp"
 import { taskApi } from "@/lib/api-client"
-// Future: AI automation imports (disabled for now)
-// import { aiAutomation, type TaskUpdate } from "@/lib/ai-automation"
+
 import { KanbanColumn } from "./kanban-column"
 import { KanbanCard } from "./kanban-card"
 import { CardModal } from "./card-modal"
@@ -29,7 +28,7 @@ import { Navbar } from "./navbar"
 import { ContextPack } from "./context-pack"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Activity, Clock } from "lucide-react"
+import { Activity, Clock, Pencil } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface KanbanBoardProps {
@@ -39,19 +38,19 @@ interface KanbanBoardProps {
 export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
   const [board, setBoard] = useState<CPMBoard | null>(null)
   const [activeTask, setActiveTask] = useState<CPMTask | null>(null)
+  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
   const [selectedTask, setSelectedTask] = useState<CPMTask | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [isContextPackOpen, setIsContextPackOpen] = useState(false)
-  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [contextPackCount, setContextPackCount] = useState(0)
+  
+  // Editable project name state
+  const [projectName, setProjectName] = useState("CPM Project Board")
+  const [isEditingName, setIsEditingName] = useState(false)
 
-  // Future: AI Automation State (disabled for now)
-  // const [isAIActive, setIsAIActive] = useState(false)
-  // const [aiWorkingTasks, setAIWorkingTasks] = useState<Set<string>>(new Set())
-  // const [taskActivities, setTaskActivities] = useState<Record<string, string>>({})
-  // const [transitioningTasks, setTransitioningTasks] = useState<Set<string>>(new Set())
+
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -122,52 +121,7 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [])
 
-  // Future: AI Automation Effect (disabled for now)
-  // useEffect(() => {
-  //   if (!isAIActive) return
-  //   const unsubscribe = aiAutomation.subscribe((update: TaskUpdate) => {
-  //     handleAIUpdate(update)
-  //   })
-  //   aiAutomation.start()
-  //   return () => {
-  //     unsubscribe()
-  //     aiAutomation.stop()
-  //   }
-  // }, [isAIActive])
 
-  // Future: AI Automation handlers (disabled for now)
-  /*
-  const handleAIUpdate = (update: TaskUpdate) => {
-    const { taskId, type, data } = update
-
-    switch (type) {
-      case "checklist":
-        handleAIChecklistUpdate(taskId, data.itemIndex)
-        break
-      case "status":
-        handleAIStatusUpdate(taskId, data.from, data.to, data.reason)
-        break
-      case "progress":
-        handleAIProgressUpdate(taskId, data.activity, data.progress)
-        break
-    }
-  }
-  */
-
-  // Future: AI Automation handler functions (disabled for now)
-  /*
-  const handleAIChecklistUpdate = (taskId: string, itemIndex: number) => {
-    // Implementation commented out for future development
-  }
-
-  const handleAIStatusUpdate = (taskId: string, fromStatus: string, toStatus: string, reason: string) => {
-    // Implementation commented out for future development
-  }
-
-  const handleAIProgressUpdate = (taskId: string, activity: string, progressIncrease: number) => {
-    // Implementation commented out for future development
-  }
-  */
 
   const tasksById = useMemo(() => {
     if (!board) return {}
@@ -470,19 +424,42 @@ export function KanbanBoard({ onStatusChange }: KanbanBoardProps) {
       <div className="p-6">
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-2">CPM Project Board</h1>
-            <p className="text-white/60">AI-powered task automation in progress</p>
+          <div className="flex items-center gap-4">
+            {/* Editable Project Name */}
+            {isEditingName ? (
+              <input
+                type="text"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                onBlur={() => setIsEditingName(false)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') setIsEditingName(false)
+                  if (e.key === 'Escape') {
+                    setProjectName("CPM Project Board")
+                    setIsEditingName(false)
+                  }
+                }}
+                className="text-2xl font-bold text-white bg-transparent border-b border-primary focus:outline-none focus:border-white/50 px-2 py-1"
+                autoFocus
+              />
+            ) : (
+              <div 
+                className="group flex items-center gap-2 cursor-pointer"
+                onClick={() => setIsEditingName(true)}
+                title="Click to edit project name"
+              >
+                <h1 className="text-2xl font-bold text-white group-hover:text-primary transition-colors">
+                  {projectName}
+                </h1>
+                <Pencil className="h-4 w-4 text-white/40 group-hover:text-primary/60 transition-all duration-200 opacity-0 group-hover:opacity-100" />
+              </div>
+            )}
+            
           </div>
 
           {/* Controls and Metrics */}
           <div className="flex items-center gap-4">
-            {/* Future: AI Toggle (disabled for now) */}
-            {/* 
-            <Button variant="ghost" size="sm" className="text-white/60">
-              AI Agent (Coming Soon)
-            </Button>
-            */}
+
 
             {/* Metrics */}
             <div className="flex items-center gap-4">
