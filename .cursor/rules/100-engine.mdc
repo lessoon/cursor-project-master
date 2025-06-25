@@ -44,6 +44,13 @@ If scaffold fails, roll back the directory and prompt the user.
    (the decomposer already writes plan.json & tasks).
    Otherwise skip.
 
+7.1 **Validate leaf-count** – If the graph has fewer than 3 tasks, pause and ask
+    the user for more granular acceptance criteria.  Do NOT continue with a
+    single mega-task.
+    
+7.2 **Write tasks** – For each leaf node, ensure the file path is
+    `project/tasks/todo/T<ID>.md`; create the directory if missing.
+
 8. **Internal debate** – if `epicCount > 20` *or* graph depth > 3, prompt:
 
    > “Generate **two** alternative high-level plans, critique each, then choose the  
@@ -63,7 +70,6 @@ C. **Archive** – on green CI, archive the completed task file:
    ```bash
    mv project/tasks/in_progress/T<ID>.md  project/tasks/done/$(date +%Y-Q%q)/
    ```
-
 D. **Progress report** – after every 5 tasks completed or upon finishing an Epic, run `python scripts/report.py`. If an Epic has completed, optionally add a Git tag to mark the release milestone.
 
 E. **Blocked-node re-plan** – If any node in `plan.json` is marked blocked, recompute that part of the plan and generate new replacement tasks (assigning fresh unique IDs).
