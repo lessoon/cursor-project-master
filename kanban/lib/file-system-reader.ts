@@ -95,7 +95,7 @@ function parseTaskFile(content: string, filePath: string): CPMTask | null {
       status = 'done'
     } else if (pathParts.includes('todo')) {
       status = 'next-up'
-    } else if (pathParts.includes('review')) {
+    } else if (pathParts.includes('backlog')) {
       status = 'inbox'
     }
     
@@ -146,8 +146,8 @@ export async function readTaskFiles(): Promise<CPMTask[]> {
   const tasksDir = path.join(projectRoot, 'project', 'tasks')
   
   try {
-    // Read from all subdirectories: todo, in_progress, done, review
-    const subdirs = ['todo', 'in_progress', 'done', 'review']
+    // Read from all subdirectories: todo, in_progress, done, backlog
+    const subdirs = ['todo', 'in_progress', 'done', 'backlog']
     
     for (const subdir of subdirs) {
       const subdirPath = path.join(tasksDir, subdir)

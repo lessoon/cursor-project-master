@@ -3,7 +3,7 @@
 ## File Naming Convention
 - **Filename:** `T-<ID>.md` (e.g., `T-1.md`, `T-42.md`)
 - **Location:** Based on status:
-  - `project/tasks/review/` → **Inbox** column (new/unassigned tasks)
+  - `project/tasks/backlog/` → **Inbox** column (new/unassigned tasks)
   - `project/tasks/todo/` → **Next Up** column (ready to start)
   - `project/tasks/in_progress/` → **Running** column (actively worked on)
   - `project/tasks/done/` → **Done** column (completed tasks)
@@ -129,7 +129,7 @@ When creating tasks:
 
 ## Status Flow
 ```
-review/ (Inbox) → todo/ (Next Up) → in_progress/ (Running) → done/ (Done)
+backlog/ (Inbox) → todo/ (Next Up) → in_progress/ (Running) → done/ (Done)
 ```
 
 Tasks move through directories as they progress through the workflow.

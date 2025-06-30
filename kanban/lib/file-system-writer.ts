@@ -92,7 +92,7 @@ function getTaskDirectory(status: CPMTask['status']): string {
   
   switch (status) {
     case 'inbox':
-      return path.join(tasksDir, 'review')
+      return path.join(tasksDir, 'backlog')
     case 'next-up':
       return path.join(tasksDir, 'todo')
     case 'running':
@@ -100,7 +100,7 @@ function getTaskDirectory(status: CPMTask['status']): string {
     case 'done':
       return path.join(tasksDir, 'done')
     default:
-      return path.join(tasksDir, 'review')
+      return path.join(tasksDir, 'backlog')
   }
 }
 

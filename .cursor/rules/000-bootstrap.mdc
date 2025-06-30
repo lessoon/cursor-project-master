@@ -4,16 +4,9 @@ globs:
 alwaysApply: true
 ---
 ---
-description: Inject AGENT charter; load sub-rules; optional memory sync.
+description: The System Bootstrap. This rule's sole function is to inject the AGENT.md charter into every session, ensuring the AI agent always operates from its core identity and protocol.
 alwaysApply: true
 ---
-
-@AGENT.md           # charter is always loaded
-
-# hooks for future mono-repo sub-projects
-@frontend/.cursor/rules
-@backend/.cursor/rules
-
-{% if env.EXTERNAL_MEMORY %}
-<call memory.write file="project/AGENT.md" namespace="cursor-pm"/>
-{% endif %}
+# This rule loads the agent's core identity and operating principles.
+# It is the first and most fundamental instruction.
+[AGENT.md](mdc:AGENT.md)

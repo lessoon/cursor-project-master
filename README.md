@@ -30,11 +30,9 @@ Cursor Project Master uses your structured Markdown documents to handle every ph
 
 ## ⚡ Quick Start
 
-### 1. Clone the Repo
-
+### 1. Install
 ```bash
-git clone https://github.com/heyzgj/cursor-project-master my-app
-cd my-app
+npx @project-master-ai/cli init
 ```
 
 ### 2. Write Your Docs
@@ -66,26 +64,25 @@ Based on my idea, generate the content for the following files(PRD/TECH SPEC/...
 > 1. Do **not** invent, infer, or guess any information. If something is unknown, ask.
 > 2. Before drafting **any** document you must:
 >    a. Ask every clarifying question needed for 100 % accuracy.
->    b. Wait until I reply **“done”** to signal that no more information will be provided for now.
->    c. Request that I upload the blank template file you’re about to fill.
+>    b. Wait until I reply **"done"** to signal that no more information will be provided for now.
+>    c. Request that I upload the blank template file you're about to fill.
 > 3. Work **one file at a time** in the order above. Do not begin the next file until I approve the current one.
 > 4. When writing:
->    • Use precise, imperative language (avoid words like “robust,” “nice,” “etc.”).
->    • If a detail is truly undecided, write **“N/A – not decided yet”** instead of leaving it blank or making assumptions.
->    • Use ISO 8601 dates (`YYYY-MM-DD`).
+>    • Use precise, imperative language (avoid words like "robust," "nice," "etc.").
+>    • If a detail is truly undecided, write **"N/A – not decided yet"** instead of leaving it blank or making assumptions.
 >    • Output pure Markdown **without code-fences** so I can paste directly into the file.
-> 5. After you deliver a draft, explicitly ask: **“Is this acceptable? If yes, reply ‘next’; if changes are needed, specify them.”**
+> 5. After you deliver a draft, explicitly ask: **"Is this acceptable? If yes, reply 'next'; if changes are needed, specify them."**
 
 > **Workflow Overview**
 >
 > 1. **Discovery Phase** – You ask exhaustive questions covering product idea, personas, constraints, metrics, stack, data, UX, style, compliance, etc.
-> 2. I answer until satisfied, then type **“done.”**
-> 3. You say: *“Please upload `PRD.md` template.”*
+> 2. I answer until satisfied, then type **"done."**
+> 3. You say: *"Please upload `PRD.md` template."*
 > 4. I upload the file.
 > 5. **Drafting Phase** – You generate the completed `PRD.md` content only.
-> 6. I review; if approved, I reply **“next.”**
+> 6. I review; if approved, I reply **"next."**
 > 7. Repeat steps 3-6 for `TECH_SPEC.md`, then `DATA_MAP.md`, `UX_FLOW.md`, and finally `STYLE_GUIDE.md`.
-> 8. After the fifth file is accepted, you conclude with **“All documents completed.”**
+> 8. After the fifth file is accepted, you conclude with **"All documents completed."**
 
 > **Begin by asking your clarifying questions now.**
 ```
@@ -116,6 +113,18 @@ npx vercel env pull
 * Track live updates in `project/project_status.md`.
 * Visual Kanban interface under `/kanban` for real-time tracking.
 * Auto-deploy preview on every commit; production deployment by merging into `main`.
+
+### 6. Quick Kanban Access
+
+```bash
+# Start Kanban board directly (in any CPM project)
+npx @project-master-ai/cli kanban
+
+# Or with custom port
+npx @project-master-ai/cli kanban --port 3001
+```
+
+The Kanban board will automatically open in your browser!
 
 ---
 
