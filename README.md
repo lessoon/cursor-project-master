@@ -1,30 +1,19 @@
 # Cursor Project Master (CPM)
 
-> **The only AI-native starter kit you'll ever need — from idea to product in Cursor.**
+![CPM Kanban Screenshot](./assets/cpm-kanban.png)
 
-Transform your ideas into production-ready applications without writing a single line of code. Just describe what you want, and watch CPM build it.
+### From idea to app. One PRD, zero code. Cursor builds it. Kanban tracks it.
 
-**Cursor Project Master** (CPM) is a system of AI-readable rules and a visual Kanban board built specifically for **Cursor** users. It takes your structured documents and transforms them into fully built, tested, and deployed applications. All you need is a clear Product Requirements Document (PRD).
+**The full-stack builder for vibe coders, product thinkers, and AI-native creators — all inside Cursor.**
 
----
+## Why Cursor Project Master?
 
-## Why CPM?
+Cursor Project Master (CPM) transforms structured documents directly into full-stack, production-ready applications. Built specifically for Cursor users, CPM requires only a single clear Product Requirements Document (PRD) to generate, test, and deploy entire applications automatically.
 
-* **📝 Just your docs:** Clearly describe your idea in Markdown—CPM takes care of the rest.
-* **📋 Visual Kanban:** Watch your tasks progress from `todo` to `done` in an AI-updated board.
-* **🤖 Zero hassle:** Automatic code generation, testing, and deployment.
-* **🚀 Instant launch:** Move swiftly from idea to deployed product, iterate effortlessly.
-
----
-
-## How CPM Works
-
-Cursor Project Master uses your structured Markdown documents to handle every phase:
-
-* **Document-Driven:** PRD, Technical Specs, Data Maps, UX Flows, and Style Guides drive development.
-* **Kanban-Powered:** Tasks are auto-generated, updated, and visualized through a live Kanban interface.
-* **Transparent:** Every step, decision, and task is openly tracked and editable.
-* **Smart & Adaptable:** Built-in self-improvement, prompt refinement, and automatic error recovery.
+* 📝 **Just your docs:** Clearly describe your idea—CPM takes care of everything else.
+* 📋 **Visual Kanban:** Track tasks automatically from `todo` to `done`.
+* 🤖 **Zero hassle:** Fully automated coding, testing, and deployment.
+* 🚀 **Instant launch:** Move swiftly from idea to deployed product, iterate effortlessly.
 
 ---
 
@@ -47,7 +36,7 @@ Fill in the templates located in `docs/_templates/`:
 
 **Tip:** Use ChatGPT or Gemini as assistants for clarity:
 
-```markdown
+```bash
 Act as a world-class product manager and a principal software architect. Your task is to help me create the initial documentation blueprint for a new software project. You must be rigorous, structured, and ask clarifying questions if my idea is ambiguous.
 
 ## CONTEXT
@@ -97,7 +86,7 @@ Open your project in **Cursor**, activate **Agent → Auto-run**, and type:
 init
 ```
 
-### 4. Configure Deployment (One-time)
+### 4. Configure Deployment (Optional if you chosoe Vercel)
 
 ```bash
 npx vercel login
