@@ -15,8 +15,6 @@ Cursor Project Master (CPM) transforms structured documents directly into full-s
 * 🤖 **Zero hassle:** Fully automated coding, testing, and deployment.
 * 🚀 **Instant launch:** Move swiftly from idea to deployed product, iterate effortlessly.
 
----
-
 ## ⚡ Quick Start
 
 ### 1. Install
@@ -34,7 +32,7 @@ Fill in the templates located in `docs/_templates/`:
 * `UX_FLOW.md` – User interactions step-by-step
 * `STYLE_GUIDE.md` – Visual and UI elements
 
-**Tip:** Use ChatGPT or Gemini as assistants for clarity:
+**Tip:** Use ChatGPT or Gemini as assistants for clarity (prompt example below):
 
 ```bash
 Act as a world-class product manager and a principal software architect. Your task is to help me create the initial documentation blueprint for a new software project. You must be rigorous, structured, and ask clarifying questions if my idea is ambiguous.
@@ -115,8 +113,6 @@ npx @project-master-ai/cli kanban --port 3001
 
 The Kanban board will automatically open in your browser!
 
----
-
 ## Adding Features (Under 1 Minute!)
 
 **Edit your PRD:**
@@ -134,8 +130,6 @@ Add the "Image Upload" feature from PRD.md.
 
 CPM takes care of updating, implementing, testing, and deploying automatically.
 
----
-
 ## Project Structure
 
 ```
@@ -152,8 +146,6 @@ scripts/                       # Utilities for reporting
 src/                           # Auto-generated code
 ```
 
----
-
 ## FAQ
 
 | Question                        | Answer                                               |
@@ -162,8 +154,6 @@ src/                           # Auto-generated code
 | Can I manually edit the code?   | Yes! Your changes become the new baseline instantly. |
 | How does CPM store "memory"?    | Clearly in local text files. Nothing hidden.         |
 | What if tests fail repeatedly?  | CPM reflects, revises plans, retries intelligently.  |
-
----
 
 ## Contribute & License
 
