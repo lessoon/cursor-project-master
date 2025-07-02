@@ -78,7 +78,7 @@ Place completed docs in `/docs`.
 
 ### 3. Let CPM Do Its Magic
 
-Open your project in **Cursor**, activate **Agent → Auto-run**, and type:
+Open your project in **Cursor**, activate **Agent Mode**, and type:
 
 ```bash
 init

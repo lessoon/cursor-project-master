@@ -23,7 +23,7 @@ while Cursor’s agent keeps the underlying markdown task files up-to-date.
 ## 2 · Information Architecture
 
 ### 2.1 Columns
-`inbox` → `next-up` → `running` → `done` (+ `blocked`, `obsolete`)
+`inbox` → `next-up` → `running` → `done` (+ `blocked`)
 
 ### 2.2 Card (list view)  
 | Field | Render | Source (in `.md`) |
@@ -60,7 +60,7 @@ while Cursor’s agent keeps the underlying markdown task files up-to-date.
 | Edit title/body | overwrite `.md` |
 | Tick checklist | toggle `- [ ]` → `- [x]` |
 | Create task | write new file under `project/tasks/inbox/` |
-| Delete card | `git rm` + move to `obsolete/` |
+| Delete card | `git rm` |
 
 ---
 

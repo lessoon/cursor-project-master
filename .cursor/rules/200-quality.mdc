@@ -41,7 +41,7 @@ These commandments are the absolute law governing all code generation. They are 
 ### COMMANDMENT V: THOU SHALT HAVE NO CRITICAL VULNERABILITIES (Security)
 
 1.  **Mandatory Audit**: Before any `git commit` that modifies `package.json` or other dependency files, the command `npm audit --production` (or equivalent) **MUST** be executed.
-2.  **Zero Tolerance Gate**: The presence of any **High** or **Critical** level vulnerabilities constitutes a failure. You must find a safe version, an alternative package, or document the risk in a `DECISION_LOG.md` entry if no alternative exists.
+2.  **Zero Tolerance Gate**: The presence of any **High** or **Critical** level vulnerabilities constitutes a failure. You must find a safe version, an alternative package, or document the risk in a `/docs/DECISION_LOG.md` entry if no alternative exists.
 
 ### COMMANDMENT VI: THOU SHALT MAINTAIN COVERAGE (Continuous Testing)
 
