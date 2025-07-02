@@ -137,7 +137,7 @@ CPM takes care of updating, implementing, testing, and deploying automatically.
 kanban/                        # AI-powered Kanban interface
 docs/                          # Product & technical specs
 project/
-  _templates/                  # Task & epic templates
+  _templates/                  # Task templates
   tasks/                       # Kanban-style management
   project_status.md            # Real-time updates
 scripts/                       # Utilities for reporting

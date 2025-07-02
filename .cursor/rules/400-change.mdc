@@ -34,7 +34,6 @@ This rule is an **interrupt-driven protocol**, triggered exclusively by a direct
     2.  Invoke the `100-engine.mdc`'s re-planning logic. The engine is responsible for:
         - Performing an "intelligent diff" between the updated `/docs` and the current `/project/plan.json`.
         - Generating new Epics and Tasks for new requirements.
-        - Moving any now-obsolete Tasks to the `/project/tasks/obsolete/` directory for audit purposes.
 - **Goal:** Delegate the complex task of re-planning to the specialized engine, keeping this rule lightweight.
 
 **STEP 4: SYNCHRONIZE EXTERNAL MEMORY (Optional)**
