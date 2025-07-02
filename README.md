@@ -139,7 +139,6 @@ docs/                          # Product & technical specs
 project/
   _templates/                  # Task & epic templates
   tasks/                       # Kanban-style management
-  TROUBLESHOOTING_LOG.md       # Agent reflections
   project_status.md            # Real-time updates
 scripts/                       # Utilities for reporting
 .github/workflows/             # CI/CD automation
