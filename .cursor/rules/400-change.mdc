@@ -1,11 +1,9 @@
 ---
-description: 
-globs: 
+description: The Change Controller. A high-priority interrupt handler for managing mid-project scope changes. It ensures the project adapts to new requirements gracefully and systematically.
+globs: true
 alwaysApply: true
 ---
----
-description: The Change Controller. A high-priority interrupt handler for managing mid-project scope changes. It ensures the project adapts to new requirements gracefully and systematically.
----
+
 # 400 · Change Controller: Interrupt, Document, Re-plan
 
 ## CONTEXT

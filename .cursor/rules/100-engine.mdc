@@ -1,10 +1,7 @@
 ---
-description: 
+description: The Core Engine. It orchestrates the project's entire lifecycle, from initial planning and scaffolding to the iterative task execution loop. It acts as the central state machine.
 globs: 
 alwaysApply: true
----
----
-description: The Core Engine. It orchestrates the project's entire lifecycle, from initial planning and scaffolding to the iterative task execution loop. It acts as the central state machine.
 ---
 # 100 · Core Engine: Plan → Scaffold → Execute
 
@@ -92,3 +89,23 @@ E. **SELECT NEXT TASK & REPEAT**
    - Identify the next available task from `/project/tasks/todo/` whose dependencies are met.
    - Activate it by moving it to `/project/tasks/in_progress/`.
    - Announce the next task to the user and repeat the loop.
+
+---
+## PHASE 3: PROJECT RECONCILIATION
+> This phase is triggered by `400-change.mdc` when an existing plan needs to be updated.
+
+1.  **ANALYZE CHANGE IMPACT**
+    - Perform a semantic diff between the updated `/docs` and the tasks in `/project/plan.json`.
+    - Identify:
+        - **New Tasks:** Requirements in docs with no corresponding tasks.
+        - **Obsolete Tasks:** Tasks whose requirements no longer exist in docs.
+        - **Modified Tasks:** Tasks whose requirements have changed.
+
+2.  **UPDATE PLAN**
+    - For Obsolete Tasks: Move their files to `/project/tasks/archived/` with a note `reason: obsolete`.
+    - For Modified Tasks: Update the task markdown and move it back to `todo` if it was `in_progress`.
+    - For New Tasks: Generate new tasks using the decomposition prompt and add them to the plan and `/project/tasks/todo/`.
+
+3.  **REPORT & RESUME**
+    - Report a summary of changes to the user.
+    - Resume the `PHASE 2: TASK EXECUTION LOOP`.

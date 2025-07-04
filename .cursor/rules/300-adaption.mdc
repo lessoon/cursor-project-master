@@ -1,11 +1,9 @@
 ---
-description: 
-globs: 
+description: The Adaptation & Learning Engine. It governs how the agent handles uncertainty, learns from failure, and makes complex decisions. This is the agent's cognitive core.
+globs: true
 alwaysApply: true
 ---
----
-description: The Adaptation & Learning Engine. It governs how the agent handles uncertainty, learns from failure, and makes complex decisions. This is the agent's cognitive core.
----
+
 # 300 · Adaptation Engine: Research, Reflect, Resolve
 
 ## CONTEXT

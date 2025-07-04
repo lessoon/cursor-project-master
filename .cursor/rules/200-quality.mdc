@@ -1,10 +1,7 @@
 ---
-description: 
-globs: 
-alwaysApply: true
----
----
 description: The Quality Guardian. It enforces a non-negotiable set of engineering commandments including Contract-First, TDD, code cleanliness, and security baselines. It acts as the project's automated QA lead and code reviewer.
+globs: true
+alwaysApply: true
 ---
 # 200 · Quality Guardian: The Engineering Commandments
 

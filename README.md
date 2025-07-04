@@ -17,14 +17,30 @@ Cursor Project Master (CPM) transforms structured documents directly into full-s
 
 ## ⚡ Quick Start
 
-### 1. Install
+### 1. Installation
+
+You have two simple options to get started:
+
+**Option 1: Let Cursor Do It (Recommended)**
+Open Cursor, start a new chat in project directory, and give it this instruction:
+> Initialize the project from `https://github.com/heyzgj/cursor-project-master` and set it up for me.
+
+**Option 2: Manual Install**
+If you prefer the command line and have **Node.js v18+** installed, run:
 ```bash
 npx @project-master-ai/cli init
 ```
 
-### 2. Write Your Docs
+### 2. Start the Project
 
-Fill in the templates located in `docs/_templates/`:
+Once the files are in your project folder, open it in **Cursor**. In the AI chat, simply type:
+```bash
+/init
+```
+
+The AI will now guide you through setting up your project requirements. There is no need to manually edit any files. Just talk to the agent.
+
+Cursor will fill in the templates located in `docs/_templates/`:
 
 * `PRD.md` – Product vision & requirements
 * `TECH_SPEC.md` – Technical stack & deployment preferences
@@ -32,7 +48,7 @@ Fill in the templates located in `docs/_templates/`:
 * `UX_FLOW.md` – User interactions step-by-step
 * `STYLE_GUIDE.md` – Visual and UI elements
 
-**Tip:** Use ChatGPT or Gemini as assistants for clarity (prompt example below):
+**Tip:** If you don't want to spend Cursor request, you can use ChatGPT or Gemini as assistants for clarity (prompt example below):
 
 ```bash
 Act as a world-class product manager and a principal software architect. Your task is to help me create the initial documentation blueprint for a new software project. You must be rigorous, structured, and ask clarifying questions if my idea is ambiguous.
@@ -76,32 +92,14 @@ Based on my idea, generate the content for the following files(PRD/TECH SPEC/...
 
 Place completed docs in `/docs`.
 
-### 3. Let CPM Do Its Magic
-
-Open your project in **Cursor**, activate **Agent Mode**, and type:
-
-```bash
-init
-```
-
-### 4. Configure Deployment (Optional if you chosoe Vercel)
-
-```bash
-npx vercel login
-npx vercel link
-npx vercel env pull
-```
-
-*(Or follow setup steps for your chosen host.)*
-
-### 5. Watch Progress
+### 3. Watch Progress
 
 * Tasks auto-update through stages (`todo`, `in_progress`, `done`).
 * Track live updates in `project/project_status.md`.
 * Visual Kanban interface under `/kanban` for real-time tracking.
 * Auto-deploy preview on every commit; production deployment by merging into `main`.
 
-### 6. Quick Kanban Access
+### 4. Quick Kanban Access
 
 ```bash
 # Start Kanban board directly (in any CPM project)
@@ -115,7 +113,7 @@ The Kanban board will automatically open in your browser!
 
 ## Adding Features (Under 1 Minute!)
 
-**Edit your PRD:**
+**Edit your PRD:(Example)**
 
 ```markdown
 ## New Feature: Image Upload
