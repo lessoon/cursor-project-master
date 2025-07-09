@@ -29,7 +29,10 @@ export async function validateGeminiKey(apiKey: string): Promise<boolean> {
   }
 }
 
-export async function generateTasksFromRequirement(requirement: string): Promise<{
+export async function generateTasksFromRequirement(
+  requirement: string,
+  language: string = "en"
+): Promise<{
   title: string
   summary: string
   description: string
@@ -41,10 +44,16 @@ export async function generateTasksFromRequirement(requirement: string): Promise
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" })
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
     
+    const languageInstruction =
+      language === "zh"
+        ? "Please respond in Chinese (中文)."
+        : "Please respond in English."
+
     const prompt = `
 You are a project management AI assistant. Transform the following feature requirement into a structured task.
+${languageInstruction}
 
 Requirement: "${requirement}"
 
@@ -71,6 +80,7 @@ Guidelines:
 - Checklist should have 3-6 specific, actionable steps that fit the project
 - Consider the existing codebase structure (components, lib, types, etc.)
 - Keep everything concise and actionable
+- The entire response, including all text inside the JSON object, MUST be in the specified language: ${language === 'zh' ? 'Chinese' : 'English'}.
 
 Label Examples:
 - ["feature", "ui"] - New UI component

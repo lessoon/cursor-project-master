@@ -28,7 +28,7 @@ export function KanbanCard({
   transitionDirection = "right",
 }: KanbanCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: task.id,
+    id: task.filePath,
   })
 
   const [showActivity, setShowActivity] = useState(false)

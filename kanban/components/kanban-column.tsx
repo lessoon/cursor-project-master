@@ -80,7 +80,7 @@ export function KanbanColumn({
           (isOver || isDragOver) && "ring-2 ring-primary/40 bg-white/8 border-primary/30",
         )}
       >
-        <SortableContext items={tasks.map((task) => task.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={tasks.map((task) => task.filePath)} strategy={verticalListSortingStrategy}>
           <div className="space-y-3">
             {/* Create Task Card - Only for Inbox when empty or as first item */}
             {column.id === "inbox" && (
@@ -97,7 +97,7 @@ export function KanbanColumn({
 
             {tasks.map((task) => (
               <KanbanCard
-                key={task.id}
+                key={task.filePath}
                 task={task}
                 onClick={onCardClick}
                 isAIWorking={aiWorkingTasks?.has(task.id)}

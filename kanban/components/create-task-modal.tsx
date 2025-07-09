@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 import { X, Sparkles, Loader2, CheckCircle2, AlertCircle } from "lucide-react"
 import { generateTasksFromRequirement, getGeminiKey } from "@/lib/gemini-ai"
 import type { CPMTask } from "@/types/cmp"
@@ -18,6 +20,7 @@ interface CreateTaskModalProps {
 
 export function CreateTaskModal({ isOpen, onClose, onCreateTask }: CreateTaskModalProps) {
   const [requirement, setRequirement] = useState("")
+  const [language, setLanguage] = useState("en")
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedTask, setGeneratedTask] = useState<any>(null)
   const [error, setError] = useState("")
@@ -40,7 +43,7 @@ export function CreateTaskModal({ isOpen, onClose, onCreateTask }: CreateTaskMod
     setError("")
 
     try {
-      const taskData = await generateTasksFromRequirement(requirement)
+      const taskData = await generateTasksFromRequirement(requirement, language)
       setGeneratedTask(taskData)
       setStep("preview")
     } catch (err) {
@@ -143,6 +146,26 @@ export function CreateTaskModal({ isOpen, onClose, onCreateTask }: CreateTaskMod
                 <p className="text-xs text-white/50 mt-1">
                   Be specific about what you want to build, including key features and requirements.
                 </p>
+              </div>
+
+              {/* Language Selection */}
+              <div>
+                <label className="block text-sm font-medium text-white mb-2">Response Language</label>
+                <RadioGroup
+                  defaultValue="en"
+                  onValueChange={setLanguage}
+                  className="flex items-center gap-6"
+                  disabled={isGenerating}
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="en" id="lang-en" className="text-white border-white/20" />
+                    <Label htmlFor="lang-en" className="text-white/80">English</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="zh" id="lang-zh" className="text-white border-white/20" />
+                    <Label htmlFor="lang-zh" className="text-white/80">中文</Label>
+                  </div>
+                </RadioGroup>
               </div>
 
               {/* API Key Warning */}

@@ -138,6 +138,32 @@ function parseTaskFile(content: string, filePath: string): CPMTask | null {
 }
 
 /**
+ * Recursively read all markdown files from a directory
+ */
+async function readMarkdownFilesRecursively(dir: string): Promise<string[]> {
+  let files: string[] = []
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true })
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name)
+      if (entry.isDirectory()) {
+        files = files.concat(await readMarkdownFilesRecursively(fullPath))
+      } else if (entry.isFile() && entry.name.endsWith('.md')) {
+        files.push(fullPath)
+      }
+    }
+  } catch (e) {
+    const error = e as { code?: string };
+    // Ignore errors for non-existent directories (like an empty 'done' folder)
+    if (error.code !== 'ENOENT') {
+      console.warn(`Could not read directory ${dir}:`, error)
+    }
+  }
+  return files
+}
+
+
+/**
  * Read all task files from the project/tasks directory structure
  */
 export async function readTaskFiles(): Promise<CPMTask[]> {
@@ -151,23 +177,15 @@ export async function readTaskFiles(): Promise<CPMTask[]> {
     
     for (const subdir of subdirs) {
       const subdirPath = path.join(tasksDir, subdir)
+      const files = await readMarkdownFilesRecursively(subdirPath)
       
-      try {
-        const files = await fs.readdir(subdirPath)
+      for (const filePath of files) {
+        const content = await fs.readFile(filePath, 'utf-8')
+        const task = parseTaskFile(content, filePath)
         
-        for (const file of files) {
-          if (file.endsWith('.md')) {
-            const filePath = path.join(subdirPath, file)
-            const content = await fs.readFile(filePath, 'utf-8')
-            const task = parseTaskFile(content, filePath)
-            
-            if (task) {
-              tasks.push(task)
-            }
-          }
+        if (task) {
+          tasks.push(task)
         }
-      } catch (error) {
-        console.warn(`Could not read directory ${subdirPath}:`, error)
       }
     }
     
@@ -184,27 +202,35 @@ export async function readTaskFiles(): Promise<CPMTask[]> {
 export async function parseCPMTasksFromFiles(): Promise<CPMBoard> {
   const tasks = await readTaskFiles()
   
+  const sortTasks = (tasks: CPMTask[]) => {
+    return tasks.sort((a, b) => {
+      const numA = parseInt(a.id.replace('T-', ''))
+      const numB = parseInt(b.id.replace('T-', ''))
+      return numB - numA
+    })
+  }
+
   const board: CPMBoard = {
     columns: [
       {
         id: "inbox",
         title: "Inbox",
-        tasks: tasks.filter(task => task.status === "inbox")
+        tasks: sortTasks(tasks.filter(task => task.status === "inbox"))
       },
       {
         id: "next-up", 
         title: "Next Up",
-        tasks: tasks.filter(task => task.status === "next-up")
+        tasks: sortTasks(tasks.filter(task => task.status === "next-up"))
       },
       {
         id: "running",
         title: "Running", 
-        tasks: tasks.filter(task => task.status === "running")
+        tasks: sortTasks(tasks.filter(task => task.status === "running"))
       },
       {
         id: "done",
         title: "Done",
-        tasks: tasks.filter(task => task.status === "done")
+        tasks: sortTasks(tasks.filter(task => task.status === "done"))
       }
     ],
     projectStatus: {
@@ -214,4 +240,4 @@ export async function parseCPMTasksFromFiles(): Promise<CPMBoard> {
   }
   
   return board
-} 
+}
